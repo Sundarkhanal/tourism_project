@@ -19,9 +19,9 @@ function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center gap-2 "> 
-                        <img src={logo} alt="Sahayatri Logo" className="w-20 h-20 object-contain"/>
+                        <img src={logo} alt="SajiloBato Logo" className="w-16 h-16 object-contain"/>
                         <div className="flex flex-col">
-                            <h1 className="text-xl font-bold text-gray-900 leading-none">Sahayatri</h1>
+                            <h1 className="text-xl font-bold text-gray-900 leading-none">SajiloBato</h1>
                         </div>
                     </div>
                     <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
@@ -45,7 +45,7 @@ function Navbar() {
                     </button>
                     {menuOpen && (
                         <div className="md:hidden absolute top-16 left-0 w-full bg-white shadow-lg">
-                                <a href="./Home" className="w-full flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-gray-100">
+                                <a href="./Home" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
                                 <FaHome/> <span>Home</span></a>
                                 <a href="./Destinations" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
                                 <FaMapMarkedAlt/><span>Destinations</span></a>
