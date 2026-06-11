@@ -19,7 +19,7 @@ const Footer = () => {
                 <img src={logo} alt="SajiloBato Logo" className="w-16 h-16 object-contain"/>
               </div>
               <h2 className="text-2xl font-bold font-serif">
-                SajiloBato
+                BaatoSanjal
               </h2>
             </div>
 

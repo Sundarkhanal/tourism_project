@@ -27,7 +27,7 @@ function Login(){
                 <div className="flex flex-col items-center mt-0">
                     <img src={logo} alt="Sahayatri Logo" className="w-36 h-36 object-contain"/>
                     <h2 className="mb-5 text-2xl font-bold text-center text-slate-900">
-                        Welcome to Sahayatri</h2>
+                        Welcome to BaatoSanjal</h2>
                 </div>
                 <p className="text-center text-slate-500 mb-5 text-sm sm:text-base">
                     Sign in to continue
