@@ -39,7 +39,7 @@ function Register() {
     return(
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-orange-100 px-4 py-8">
             <div className="w-full max-w-md p-8 bg-white rounded-3xl shadow-2xl p-6 sm:p-8">
-                <Link to="/" className="flex items-center gap-2 mb-4 text-x font-semibold text-gray-500">
+                <Link to="/Login" className="flex items-center gap-2 mb-4 text-x font-semibold text-gray-500">
                 <FaArrowLeft/>Back to sign in</Link>
                 <h2 className="mb-5 text-3xl sm:text-4xl font-bold text-center text-slate-900">
                    Create your account
