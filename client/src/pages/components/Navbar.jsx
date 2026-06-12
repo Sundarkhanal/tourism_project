@@ -12,6 +12,7 @@ FaRobot,
 FaUserCircle,
 FaMapMarkedAlt
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function Navbar() {
     const [menuOpen,setMenuOpen] =useState(false);
@@ -26,18 +27,18 @@ function Navbar() {
                         </div>
                     </div>
                     <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-                            <a href="/" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
-                            <FaHome/> <span>Home</span></a>
-                            <a href="/destinations" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
-                            <FaMapMarkedAlt/><span>Destinations</span></a>
-                            <a href="/blogs" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
-                            <FaFileSignature/> <span>Blogs</span></a>
-                            <a href="/news" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
-                            <FaNewspaper/> <span>News</span></a>
-                            <a href="/chatbot" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
-                            <FaRobot/> <span>Chatbot</span> </a>
-                            <a href="/profile" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
-                            <FaUserCircle/> <span>Profile</span></a>
+                            <Link to="/" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
+                            <FaHome/> <span>Home</span></Link>
+                            <Link to="/destinations" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
+                            <FaMapMarkedAlt/><span>Destinations</span></Link>
+                            <Link to="/blogs" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
+                            <FaFileSignature/> <span>Blogs</span></Link>
+                            <Link to="/news" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
+                            <FaNewspaper/> <span>News</span></Link>
+                            <Link to="/chatbot" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
+                            <FaRobot/> <span>Chatbot</span> </Link>
+                            <Link to="/profile" className="flex items-center gap-2 px-2 py-2 border border-transparent rounded-xl hover:bg-gray-200 transition duration-300">
+                            <FaUserCircle/> <span>Profile</span></Link>
                     </div>
                      {/*Mobile menu  */}
                     <button className="md:hidden ml-auto text-2xl text-slate-700" 
@@ -46,18 +47,18 @@ function Navbar() {
                     </button>
                     {menuOpen && (
                         <div className="md:hidden absolute top-16 left-0 w-full bg-white shadow-lg">
-                                <a href="/" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
-                                <FaHome/> <span>Home</span></a>
-                                <a href="/destinations" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
-                                <FaMapMarkedAlt/><span>Destinations</span></a>
-                                <a href="/blogs" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
-                                <FaFileSignature/> <span>Blogs</span></a>
-                                <a href="/news" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
-                                <FaNewspaper/> <span>News</span></a>
-                                <a href="/chatbot" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
-                                <FaRobot/> <span>Chatbot</span> </a>
-                                <a href="/profile" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
-                                <FaUserCircle/> <span>Profile</span></a>
+                                <Link to="/" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
+                                <FaHome/> <span>Home</span></Link>
+                                <Link to="/destinations" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
+                                <FaMapMarkedAlt/><span>Destinations</span></Link>
+                                <Link to="/blogs" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
+                                <FaFileSignature/> <span>Blogs</span></Link>
+                                <Link to="/news" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
+                                <FaNewspaper/> <span>News</span></Link>
+                                <Link to="/chatbot" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
+                                <FaRobot/> <span>Chatbot</span> </Link>
+                                <Link to="/profile" className="w-full flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-gray-100">
+                                <FaUserCircle/> <span>Profile</span></Link>
                         </div>
                     )}
 
