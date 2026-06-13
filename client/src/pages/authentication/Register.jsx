@@ -10,10 +10,11 @@ function Register() {
     const navigate=useNavigate();
 
     const [formData, setFormData]=useState({
-        name:"",
         email: "",
         password: "",
-        confirmPassword:"", 
+        address:"",
+        phone:"",
+        gender:"", 
     });
     
     const handleChange=(e)=>{   //called whenever input changes
@@ -71,7 +72,7 @@ return(
                     </div>
                     <div>
                         <label className=" mb-1 font-medium text-center text-gray-700">Address</label>
-                        <input type="text" name="address" placeholder="" value={formData.address} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
+                        <input type="text" name="address" placeholder="Enter yourr address" value={formData.address} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
                     </div>
                     <div>
                         <label className=" mb-1 font-medium text-center text-gray-700">Gender</label>

@@ -4,9 +4,7 @@ import Hero from "./sections/Hero";
 function Home() {
   return (
     <>
-        <Navbar/>
         <Hero/>
-        <Footer />
     </>
   );
 }
