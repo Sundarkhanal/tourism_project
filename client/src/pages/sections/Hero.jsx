@@ -71,7 +71,7 @@ function Hero() {
       </div>
 
       {/* Bottom Fade Effect */}
-      <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-white/50 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 w-full h-50 bg-gradient-to-t from-white via-white/60 to-transparent pointer-events-none z-20"></div>
     </section>
   );
 }
