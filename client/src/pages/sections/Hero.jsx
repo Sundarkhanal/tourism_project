@@ -27,7 +27,7 @@ function Hero() {
           <p className="mt-16 text-base md:text-2xl text-gray-200 max-w-3xl leading-relaxed">
             SajiloBato is your smart travel companion for Nepal.
             Find nearby hotels, heritage sites, hiking trails,
-            and hidden gems — all within your reach.
+            and hidden gems all within your reach.
             Let us guide your next adventure.
           </p>
 
