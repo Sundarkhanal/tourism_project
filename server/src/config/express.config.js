@@ -1,7 +1,7 @@
 const express = require("express")
 const router = require("../router/router")
 const errorHanlder = require("../middlewares/error-handler.middleware")
-
+const mongoInitialize = require("../config/mangodb.config")
 const app = express()
 
 // body parser
@@ -12,6 +12,7 @@ app.use(express.urlencoded({
     limit: "5mb"
 }))
 
+mongoInitialize()
 //static middleware
 app.use("assets/", express.static('./public/uploads/'))
 
