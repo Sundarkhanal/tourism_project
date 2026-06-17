@@ -1,10 +1,15 @@
+const bcrypt = require("bcryptjs")
+const userService = require("../services/user.service")
 class AuthController{
 
     register = (req, res, next) => {
         try {
+            const data = userService.transformUserData(data)
+            const user = userService.createUser(data)
+            
             res.json({
                 
-                data: req.body,
+                data: userService.getPublicUserProfile(user),
                 message:"Register Now",
                 status:"ok"
             })
