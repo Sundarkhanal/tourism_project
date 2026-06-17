@@ -1,16 +1,15 @@
 const bcrypt = require("bcryptjs")
-const randomStringGenerator = require("../utilities/hepler")
+const userService = require("../services/user.service")
 class AuthController{
 
     register = (req, res, next) => {
         try {
-            const data = req.body
-            data.password = bcrypt.hashSync(data.password)
-            data.emailVerified = false
-            data.otp = randomStringGenerator(6).toUpperCase()
+            const data = userService.transformUserData(data)
+            const user = userService.createUser(data)
+            
             res.json({
                 
-                data: data,
+                data: userService.getPublicUserProfile(user),
                 message:"Register Now",
                 status:"ok"
             })
