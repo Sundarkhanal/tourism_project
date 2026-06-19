@@ -19,7 +19,7 @@ const Footer = () => {
                 <img src={logo} alt="SajiloBato Logo" className="w-16 h-16 object-contain"/>
               </div>
               <h2 className="text-2xl font-bold font-serif">
-                BaatoSanjal
+                BatoSanjaal
               </h2>
             </div>
 
@@ -101,7 +101,7 @@ const Footer = () => {
         {/*Copyright */}
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-lg">
-            &copy; 2026 BaatoSanjal. Explore Nepal with confidence.
+            &copy; 2026 BatoSanjaal. Explore Nepal with confidence.
           </p>
         </div>
       </div>

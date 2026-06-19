@@ -23,7 +23,7 @@ function Navbar() {
                     <div className="flex items-center gap-1 "> 
                         <img src={logo} alt="SajiloBato Logo" className="w-16 h-16 object-contain"/>
                         <div className="flex flex-col">
-                            <h1 className="text-xl font-bold text-gray-900 leading-none">BaatoSanjal</h1>
+                            <h1 className="text-xl font-bold text-gray-900 leading-none">BatoSanjaal</h1>
                         </div>
                     </div>
                     <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">

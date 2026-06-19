@@ -10,6 +10,7 @@ function Register() {
     const navigate=useNavigate();
 
     const [formData, setFormData]=useState({
+        name:"",
         email: "",
         password: "",
         address:"",
@@ -58,6 +59,10 @@ return(
             {/* Left Section - Form */}
             <div className="w-1/2 flex flex-col items-center justify-center p-10">
                 <form onSubmit={handleSubmit} className='space-y-4'>
+                    <div>
+                        <label className=" mb-1 font-medium text-center text-gray-700">Name</label>
+                        <input type="text" name="name" placeholder="Enter your name" value={formData.name} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition"/>
+                    </div>
                     <div>
                         <label className=" mb-1 font-medium text-center text-gray-700">Email</label>
                         <input type="email" name="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition"/>
