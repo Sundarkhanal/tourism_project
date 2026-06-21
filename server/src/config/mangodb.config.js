@@ -1,5 +1,5 @@
 const { default: mongoose } = require("mongoose")
-const dbConfig = require("../config/db.config")
+const {dbConfig} = require("../config/config")
 
 const mangoInitialize = async() => {
     try {
