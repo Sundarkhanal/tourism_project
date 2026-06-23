@@ -21,4 +21,18 @@ const RegisterDTO = Joi.object({
     address:Joi.string().optional().allow(null, "").default(null)
 })
 
-module.exports = RegisterDTO
+const OTPVerifyDTO = Joi.object({
+    otp: Joi.string().required(),
+    email: Joi.string().email().required()
+})
+
+const LoginDTO = Joi.object({
+    email: Joi.string().email().required(),
+    password:Joi.string().required()
+})
+module.exports = {
+    RegisterDTO,
+    OTPVerifyDTO,
+    LoginDTO
+
+}
