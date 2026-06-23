@@ -1,3 +1,4 @@
+const { string } = require("joi")
 const mongoose = require("mongoose")
 
 const UserSchema = new mongoose.Schema({
@@ -23,6 +24,11 @@ const UserSchema = new mongoose.Schema({
     phone: String,
     address: String,
     otp: String,
+    expiryTime: Date,
+    status:{
+        type: String,
+        default:"inactive"
+    },
     gender: String,
     passwordResetToken: String,
     passwordResetExpiry: Date,

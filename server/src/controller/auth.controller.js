@@ -1,7 +1,27 @@
+const { appConfig } = require("../config/config")
 const emailService = require("../services/email.service")
 const userService = require("../services/user.service")
+const randomStringGenerator = require("../utilities/hepler")
+const jwt = require("jsonwebtoken")
 class AuthController{
 
+    //we don't have to return using private variable
+    #userDetail
+    async #validateUserExistsByEmail(email){
+        this.#userDetail = await userService.getSingleUserProfile({
+            email: email
+            })
+        if (!this.#userDetail) {
+                throw{
+            code: 400,
+            details:{
+                email:"Email is not resgistered yet"
+            },
+            message:"User Not Found",
+            status:"USER_NOT_REGISTERED_ERR"
+            }
+        }
+    }
     register = async(req, res, next) => {
         try {
             const data = userService.transformUserData(req)
@@ -9,117 +29,7 @@ class AuthController{
             await emailService.sendEmail({
                 to: user.email,
                 subject: "Activate your Account",
-                message:`html
-                            <!DOCTYPE html>
-                            <html lang="en">
-                            <head>
-                                <meta charset="UTF-8">
-                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                <title>Verify Your Account - BatoSanjaal</title>
-                            </head>
-                            <body style="margin:0;padding:0;background-color:#f0fdfa;font-family:Arial,Helvetica,sans-serif;">
-
-                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0fdfa;padding:30px 15px;">
-                                    <tr>
-                                        <td align="center">
-
-                                            <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.08);">
-
-                                                <!-- Header -->
-                                                <tr>
-                                                    <td align="center" style="background:linear-gradient(135deg,#0f766e,#14b8a6);padding:40px 30px;">
-                                                        <h1 style="margin:0;color:#ffffff;font-size:32px;font-weight:700;">
-                                                            BatoSanjaal
-                                                        </h1>
-                                                        <p style="margin:10px 0 0;color:#d1fae5;font-size:16px;line-height:1.5;">
-                                                            Your Journey Starts Here
-                                                        </p>
-                                                    </td>
-                                                </tr>
-
-                                                <!-- Content -->
-                                                <tr>
-                                                    <td style="padding:40px 35px;color:#374151;">
-
-                                                        <h2 style="margin-top:0;color:#0f766e;font-size:26px;">
-                                                            Welcome, ${user.name}! 👋
-                                                        </h2>
-
-                                                        <p style="font-size:16px;line-height:1.8;margin-bottom:20px;">
-                                                            Thank you for joining <strong>BatoSanjaal</strong>. We're excited to have you as part of our growing community.
-                                                        </p>
-
-                                                        <p style="font-size:16px;line-height:1.8;margin-bottom:25px;">
-                                                            BatoSanjaal is designed to help people connect, travel smarter, and discover opportunities along the way. Whether you're looking to explore new destinations, connect with fellow travelers, or make your journey more efficient, you're in the right place.
-                                                        </p>
-
-                                                        <!-- OTP Box -->
-                                                        <div style="text-align:center;margin:35px 0;">
-                                                            <p style="margin-bottom:12px;color:#6b7280;font-size:14px;">
-                                                                Your Verification Code
-                                                            </p>
-
-                                                            <div style="display:inline-block;background:#ecfeff;border:2px solid #14b8a6;border-radius:12px;padding:18px 40px;">
-                                                                <span style="font-size:34px;font-weight:bold;letter-spacing:8px;color:#0f766e;">
-                                                                    ${user.otp}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        <p style="font-size:15px;line-height:1.8;">
-                                                            Enter this OTP to verify your account and complete your registration.
-                                                            This code will remain valid for <strong>10 minutes</strong>.
-                                                        </p>
-
-                                                        <!-- Motivation Section -->
-                                                        <div style="background:#f0fdfa;border-left:4px solid #14b8a6;padding:20px;margin:30px 0;border-radius:8px;">
-                                                            <h3 style="margin-top:0;color:#0f766e;">
-                                                                Why Complete Your Registration?
-                                                            </h3>
-
-                                                            <p style="margin-bottom:0;font-size:15px;line-height:1.8;color:#4b5563;">
-                                                                Every great journey begins with a single step. By verifying your account today,
-                                                                you'll unlock access to features designed to make traveling and connecting easier,
-                                                                faster, and more meaningful. We can't wait to see where your journey with
-                                                                BatoSanjaal takes you.
-                                                            </p>
-                                                        </div>
-
-                                                        <p style="font-size:15px;line-height:1.8;color:#4b5563;">
-                                                            If you did not request this code, you can safely ignore this email.
-                                                        </p>
-
-                                                    </td>
-                                                </tr>
-
-                                                <!-- Footer -->
-                                                <tr>
-                                                    <td align="center" style="background:#f8fafc;padding:25px;border-top:1px solid #e5e7eb;">
-
-                                                        <p style="margin:0;color:#0f766e;font-weight:600;font-size:16px;">
-                                                            Thank you for choosing BatoSanjaal
-                                                        </p>
-
-                                                        <p style="margin:10px 0 0;color:#6b7280;font-size:13px;line-height:1.6;">
-                                                            This is an automated message. Please do not reply to this email.
-                                                        </p>
-
-                                                        <p style="margin:10px 0 0;color:#9ca3af;font-size:12px;">
-                                                            © 2026 BatoSanjaal. All Rights Reserved.
-                                                        </p>
-
-                                                    </td>
-                                                </tr>
-
-                                            </table>
-
-                                        </td>
-                                    </tr>
-                                </table>
-
-                            </body>
-                            </html>
-                            `
+                message:userService.getActivateYourAccountMessage({name:user.name, otp:user.otp})
 
             })
             
@@ -134,15 +44,125 @@ class AuthController{
         }
     }
 
-    login = (req, res, next) => {
+    activateUser = async(req, res, next) => {
         try {
-            const {email, password} = req. body
-            
-            
+            const {email, otp} = req.body
+            await this.#validateUserExistsByEmail(email)
+            if(userDetail.status === "active"){
+                throw{
+                    code: 422,
+                    message:"Profile Already Activated",
+                    status:"ALREADY_ACTIVATED_ACCOUNT_ERR"
+                }
+            }
+            if(userDetail.otp !== otp){
+                throw{
+                    code: 400,
+                    details:{
+                        otp:"Incorrect OTP Code"
+                    },
+                    message:"OTP Not Matched",
+                    status:"OTP_NOT_MATCH_ERR"
+                }
+            }
+            const OTPExpiryTime = userDetail.expiryTime.getTime()
+            const currentTime = Date.now();
+
+            if(OTPExpiryTime < currentTime){
+                throw{
+                    code:400,
+                    details:{otp:"OTP Expired"},
+                    message:"OTP Expired",
+                    status:"OTP_EXPIRED_ERR"
+               
+                }
+            }
+            const update = await userService.getSingleUserProfile({
+                _id: userDetail._id,
+            }, {
+                otp:null,
+                expiryTime: null,
+                status:"active"
+            })
+            res.json({
+                data:userService.getPublicUserProfile(update),
+                message:"Your Account Activated Successfully!",
+                status:"ok"
+            })
+
         } catch (exception) {
             next(exception)
         }
     }
+
+    resendActivationOTP = async(req, res, next) => {
+        try {
+            const {email, otp} = req.body
+            const userDetail = await userService.getSingleUserProfile({
+                email: email,
+                otp:otp
+            })
+            if (!userDetail) {
+                throw{
+                    code: 404,
+                    message:"User Not Found",
+                    status:"USER_NOT_FOUND_ERR"
+                }
+            }
+
+            if(userDetail.otp !== otp){
+                throw{
+                    code: 400,
+                    details:{
+                        otp:"Incorrect OTP Code"
+                    },
+                    message:"OTP Not Matched",
+                    status:"OTP_NOT_MATCH_ERR"
+                }
+            }
+            const OTPExpiryTime = userDetail.expiryTime.getTime()
+            const currentTime = Date.now();
+
+            if(OTPExpiryTime >= currentTime){
+                throw{
+                    code:400,
+                    details:{otp:"OTP Not Expired"},
+                    message:"OTP Not Expired",
+                    status:"OTP_NOT_EXPIRED_ERR"
+               
+                }
+            }
+            const data = {
+                otp: randomStringGenerator(6),
+                expiryTime: new Date(Date.now() + 600000)
+            }
+            const update = await userService.getSingleUserProfile({
+                _id: userDetail._id,
+            }, {
+                data
+            });
+            await emailService.sendEmail({
+                to: userDetail.email,
+                subject:"Re-OTP Code",
+                message:userService.getResentActivationOTPCode({name: userDetail.name, otp:userDetail.otp})
+                
+            })
+            res.json({
+                data:userService.getPublicUserProfile(update),
+                message:"An email has been sent to your registered Account!",
+                status:"ok"
+            })
+
+        } catch (exception) {
+            console.log(exception);
+            
+            next(exception)
+        }
+    }
+
+
+
+
 }
 
 
