@@ -3,6 +3,7 @@ const emailService = require("../services/email.service")
 const userService = require("../services/user.service")
 const randomStringGenerator = require("../utilities/hepler")
 const jwt = require("jsonwebtoken")
+const bcrypt = require("bcryptjs")
 class AuthController{
 
     //we don't have to return using private variable
@@ -48,14 +49,14 @@ class AuthController{
         try {
             const {email, otp} = req.body
             await this.#validateUserExistsByEmail(email)
-            if(userDetail.status === "active"){
+            if(this.#userDetail.status === "active"){
                 throw{
                     code: 422,
                     message:"Profile Already Activated",
                     status:"ALREADY_ACTIVATED_ACCOUNT_ERR"
                 }
             }
-            if(userDetail.otp !== otp){
+            if(this.#userDetail.otp !== otp){
                 throw{
                     code: 400,
                     details:{
@@ -65,7 +66,7 @@ class AuthController{
                     status:"OTP_NOT_MATCH_ERR"
                 }
             }
-            const OTPExpiryTime = userDetail.expiryTime.getTime()
+            const OTPExpiryTime = this.#userDetail.expiryTime.getTime()
             const currentTime = Date.now();
 
             if(OTPExpiryTime < currentTime){
@@ -77,8 +78,8 @@ class AuthController{
                
                 }
             }
-            const update = await userService.getSingleUserProfile({
-                _id: userDetail._id,
+            const update = await userService.updateSingleUserProfile({
+                _id: this.#userDetail._id,
             }, {
                 otp:null,
                 expiryTime: null,
@@ -91,6 +92,8 @@ class AuthController{
             })
 
         } catch (exception) {
+            console.log(exception);
+            
             next(exception)
         }
     }
@@ -159,7 +162,37 @@ class AuthController{
             next(exception)
         }
     }
+    login = async(req, res, next) => {
+        try {
+            const {email, password} = req. body
+            await this.#validateUserExistsByEmail(email)
 
+            if(this.#userDetail.status === "inactive"){
+                throw{
+                    code: 422,
+                    message:"User not Activated yet...",
+                    status:"USER_NOT_ACTIVATED_ERR"
+                }
+            }
+            if(!bcrypt.compareSync(password, this.#userDetail.password)){
+                throw{
+                    code:422,
+                    message:"Credentials doesn't match",
+                    status:"INVALID_CREDENTIALS_ERR"
+                }
+            }
+            const token = jwt.sign({sub:this.#userDetail._id}, appConfig.jwtSecret, {expiresIn:"1d"})
+            res.cookie("Authorization", "Bearer "+token, {maxAge:24*60*60*1000, httpOnly: true})
+            res.json({
+                data: token,
+                message:"You are loggedIn",
+                status:"ok"
+            })
+            
+        } catch (exception) {
+            next(exception)
+        }
+    }
 
 
 
