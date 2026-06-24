@@ -194,6 +194,14 @@ class AuthController{
         }
     }
 
+    getLoggedInuser = (req, res, next) => {
+        try {
+            
+        } catch (exception) {
+            next(exception)
+        }
+    }
+
 
 
 }
