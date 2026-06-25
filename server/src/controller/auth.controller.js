@@ -194,6 +194,99 @@ class AuthController{
         }
     }
 
+    getLoggedInuser = (req, res, next) => {
+        try {
+            res.json({
+                data:req.loggedInUser,
+                message:"Your Account Detail",
+                status:"Ok"
+            })
+        } catch (exception) {
+            next(exception)
+        }
+    }
+    forgetPassword = async(req, res, next) => {
+            try {
+                const {email} = req. body
+                await this.#validateUserExistsByEmail(email)
+
+                const resetToken = randomStringGenerator(6).toUpperCase()
+                const expiryTime = new Date(Date.now()+10*60*1000)
+                
+
+                await userService.updateSingleUserProfile({_id: this.#userDetail._id}, {
+                    passwordResetToken: resetToken,
+                    passwordResetExpiry: expiryTime
+                })
+
+                await emailService.sendEmail({
+                    to:this.#userDetail.email,
+                    subject:"Reset Your Password",
+                    message:userService.getResetPasswordMessage({
+                        name:this.#userDetail.name,
+                        resetLink:`http://localhost:5173/reset-password?token=${encodeURIComponent(resetToken)}`
+                    })
+                })
+                res.json({
+                    message:"An Email has been sent to your account",
+                    status:"OK"
+                })
+
+                
+            } catch (exception) {
+                next(exception)
+            }
+    }
+    resetPassword = async (req, res, next) => {
+        try {
+            const { token, newpassword } = req.body;
+            const user = await userService.getSingleUserProfile({
+                passwordResetToken: token,
+                passwordResetExpiry: { $gt: new Date() }
+            });
+            if (!user) {
+                throw {
+                    code: 400,
+                    message: "Invalid or expired token",
+                    status: "INVALID-TOKEN_ERR"
+                };
+            }
+            const newHashedPassword = bcrypt.hashSync(newpassword, 10);   // 10 is the salt rounds
+            await userService.updateSingleUserProfile(
+                { _id: user._id },
+                {
+                    status:"active",
+                    password: newHashedPassword,
+                    passwordResetToken: null,
+                    passwordResetExpiry: null
+                }
+            );
+            res.json({
+                message: "Password Reset Successfully.",
+                status: "OK"
+            });
+        } catch (exception) {
+            console.log(exception);
+            
+            next(exception);
+        }
+    };
+    logout = (req, res, next) =>{
+        try {
+            res.clearCookie("token")
+
+            res.json({
+                message:"Logged out successfully",
+                status:"Ok"
+            })
+            
+        } catch (exception) {
+            next(exception)
+            
+        }
+    }
+
+
 
 
 }

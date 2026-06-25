@@ -2,8 +2,11 @@ const express = require("express")
 const router = require("../router/router")
 const errorHanlder = require("../middlewares/error-handler.middleware")
 const mongoInitialize = require("../config/mangodb.config")
+const cookieParser = require("cookie-parser")
 const app = express()
 
+
+app.use(cookieParser())
 // body parser
 app.use(express.json({
     limit: "5mb"
