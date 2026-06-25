@@ -21,6 +21,11 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Destination"
     }],
+    role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user"  //default is user, no need to send from frontend
+    },
     phone: String,
     address: String,
     otp: String,
