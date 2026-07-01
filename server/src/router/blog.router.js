@@ -9,6 +9,7 @@ const blogRouter = require("express").Router()
 
 blogRouter.post("/create-blog",checkPermission(),uploader().single("image"), validator(BlogDTO),blogCtrl.createBlog)
 blogRouter.get("/all-blogs", blogCtrl.listAllBlogs)
+blogRouter.get("/:blogId", blogCtrl.getDetailById)
 
 
 module.exports = blogRouter
