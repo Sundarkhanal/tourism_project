@@ -9,9 +9,9 @@ const BlogSchema = new mongoose.Schema({
     destination_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Destination",
-        required: true,
+        required: false,
     },
-    caption: {
+    description: {
         type: String,
         min: 3,
         max: 1000,
