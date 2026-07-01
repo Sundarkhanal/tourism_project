@@ -8,6 +8,7 @@ import Blogs from "./pages/Blogs";
 import Destinations from "./pages/Destinations";
 import Layout from "./pages/components/Layout";
 import './App.css';
+import ForgotPassword from "./pages/authentication/forgotpassword";
 
 function App() {
  
@@ -25,6 +26,7 @@ function App() {
       </Route>
       <Route path="/register" element={<Register/>} />
       <Route path="/login" element={<Login/>} />
+      <Route path="/forgotpassword" element={<ForgotPassword/>} />
     </Routes>
     </BrowserRouter>
   )
