@@ -38,6 +38,15 @@ class BlogService{
             }
         }
     }
+
+    getSingleRow = async(filter) => {
+        try {
+            const data = await BlogModel.findById(filter).populate("user_id", ['_id',"name"])
+            return data
+        } catch (exception) {
+            throw exception
+        }
+    }
 }
 
 module.exports = new BlogService()

@@ -3,9 +3,13 @@ const router = require("../router/router")
 const errorHanlder = require("../middlewares/error-handler.middleware")
 const mongoInitialize = require("../config/mangodb.config")
 const cookieParser = require("cookie-parser")
+const cors = require("cors")
 const app = express()
 
-
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 app.use(cookieParser())
 // body parser
 app.use(express.json({

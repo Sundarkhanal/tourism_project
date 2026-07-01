@@ -39,9 +39,25 @@ class BlogController{
         }
     }
 
-    getDetailById = (req, res, next) => {
+    getDetailById = async(req, res, next) => {
         try {
-            
+            const id = req.params.blogId
+            let filter = {
+                _id: id
+            }
+            const data = await blogService.getSingleRow(filter)
+            if (!data) {
+                throw{
+                    code: 404,
+                    message:"Blog Not found",
+                    status:"NOT_FOUND_ERR"
+                }
+            }
+            res.json({
+                data: data,
+                message:"Blog Detail",
+                status:"Ok"
+            })
         } catch (exception) {
             next(exception)
         }
