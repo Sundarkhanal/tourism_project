@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
@@ -16,10 +17,35 @@ function Login(){
             [e.target.name]:e.target.value,     //'email='abcd@email'
         });
     };
-
-    const handleSubmit=(e)=>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);  //prints value in console until api is connected
+
+        try {
+            const response = await axios.post(
+            "http://localhost:9005/api/v1/auth/login",
+            formData
+            );
+
+            console.log("Login Success:", response.data);
+
+            alert("Login Successful!");
+
+            // If the backend returns a token
+            if (response.data.token) {
+            localStorage.setItem("token", response.data.token);
+            }
+
+            navigate("/");
+        } catch (error) {
+            console.log(error);
+
+            if (error.response) {
+            console.log(error.response.data);
+            alert(error.response.data.message || "Login Failed");
+            } else {
+            alert(error.message);
+            }
+        }
     };
 
     return(
@@ -40,7 +66,7 @@ function Login(){
                 <button type="submit" className="w-full px-4 py-3 font-semibold text-white transition duration-300 rounded-2xl bg-teal-600 hover:bg-teal-700 shadow-lg">Login</button>
             </form>
             <div className="mt-1 flex flex-col items-center justify-between sm:flex-row">
-                <Link to="/forgot-password" className=" text-sm font-semibold text-slate-900 hover:underline">
+                <Link to="/forgotpassword" onClick={() => navigate("/forgotPassword")} className=" text-sm font-semibold text-slate-900 hover:underline">
                     Forgot Password? 
                 </Link>
             </div>

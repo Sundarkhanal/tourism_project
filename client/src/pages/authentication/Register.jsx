@@ -4,6 +4,8 @@ import {FaArrowLeft} from "react-icons/fa";
 import {MdEmail} from "react-icons/md";
 import {FaLock} from "react-icons/fa";
 
+import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
 
 function Register() {
@@ -17,26 +19,47 @@ function Register() {
         phone:"",
         gender:"", 
     });
+    const handleChange = (e) => {
+    setFormData({
+        ...formData,
+        [e.target.name]: e.target.value,
+    });
+    };
     
-    const handleChange=(e)=>{   //called whenever input changes
-        setFormData({
-            ...formData,        //spread operator,copies all values that exists
-            [e.target.name]:e.target.value,     //'email='abcd@email'
-        });
+    // backend connection
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+        const response = await axios.post(
+        "http://localhost:9005/api/v1/auth/register",
+        formData
+        // { can write this but is long as formdata contains all the req fields
+        //     name: formData.name,
+        //     email: formData.email,
+        //     password: formData.password,
+        //     phone: formData.phone,
+        //     address: formData.address,
+        //     gender: formData.gender,
+        // }
+        
+        );
+
+        console.log(response.data);
+
+        alert("Registration Successful!");
+
+        navigate("/login");
+
+    } catch (error) {
+        console.log(error);
+
+        alert(
+        error.response?.data?.message || "Registration Failed"
+        );
+    }
     };
 
-    const handleSubmit=(e)=>{
-        e.preventDefault();
-
-        //validation
-        if(formData.password!== formData.confirmPassword){
-            alert('Password do not match');
-            return;
-        }
-        console.log("Register Data:", formData);
-        alert("Registration Succesfull");
-        navigate("/");
-    };
 return(
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-6">
         <div className="flex w-full max-w-3xl bg-white rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
