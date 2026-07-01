@@ -3,6 +3,9 @@ module.exports = (rules) => {
     return async(req, res, next) => {
         try {
             const data = req.body
+            if (req.file) {
+                data.image = req.file.filename;
+            }
             if (!data) {
                 throw{
                     code: 422,
