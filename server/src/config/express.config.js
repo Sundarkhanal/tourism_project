@@ -4,12 +4,24 @@ const errorHanlder = require("../middlewares/error-handler.middleware")
 const mongoInitialize = require("../config/mangodb.config")
 const cookieParser = require("cookie-parser")
 const cors = require("cors")
+const {rateLimit} = require("express-rate-limit")
+const helmet = require("helmet")
 const app = express()
 
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
 }));
+
+//for xss policy
+app.use(helmet())
+
+const limiter = rateLimit({
+    windowMs: 1*60*100,
+    limit: 20,
+
+})
+app.use(limiter)
 app.use(cookieParser())
 // body parser
 app.use(express.json({

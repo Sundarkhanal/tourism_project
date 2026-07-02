@@ -47,6 +47,34 @@ class BlogService{
             throw exception
         }
     }
+
+    updateSingleBlog = async(filter, data) => {
+        try {
+            const updatedData = await BlogModel.findOneAndUpdate(filter, {$set: data}, {new: true})
+            return updatedData;
+        } catch (exception) {
+            console.log(exception);
+            
+            throw{
+                code: 500,
+                message:exception.message ?? "Error Updating Blog...",
+                status:"ERR_UPDATING_BLOG"
+            }
+        }
+    }
+
+    deleteSingleBlog = async(filter) => {
+        try {
+            const deletedBlog = await BlogModel.findOneAndDelete(filter)
+            return deletedBlog
+        } catch (exception) {
+            throw{
+                code: 500,
+                message: exception.message ?? "Error Deleting Blog...",
+                status:"ERR_DELETING_BLOG"
+            }
+        }
+    }
 }
 
 module.exports = new BlogService()

@@ -7,6 +7,14 @@ const BlogDTO = Joi.object({
     description:Joi.string().min(2).max(1000).required()
 })
 
+const BlogUpdateDTO = Joi.object({
+    image:Joi.string().required().messages({
+        "any.required":"Image is required"
+    }),
+    description:Joi.string().min(2).max(1000).required()
+})
+
 module.exports = {
-    BlogDTO
+    BlogDTO,
+    BlogUpdateDTO
 }
