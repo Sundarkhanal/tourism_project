@@ -11,6 +11,7 @@ const Profile = () => {
   const navigate = useNavigate();
 //  const token = "test-token";
   const token = localStorage.getItem("token");
+  console.log("Token:", localStorage.getItem("token"));
 
   const [activeTab, setActiveTab] = useState("favorites");
   const [user, setUser] = useState({});
@@ -33,18 +34,7 @@ const Profile = () => {
 
     loadData();
   }, [token]);
-
-  const removeFavorite = async (id) => {
-    try {
-      await api.delete(`/favorites/${id}`);
-
-      setFavorites((prev) =>
-        prev.filter((item) => item._id !== id)
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  }; 
+  
 
    const logout = () => {
     navigate("/logout");
@@ -98,7 +88,7 @@ const Profile = () => {
         favorites={favorites}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        removeFavorite={removeFavorite}
+        removeFavorite={() => {}}  //dummy function         ...............................
       />
     ) : (
       <AccountDetails
