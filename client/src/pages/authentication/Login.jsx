@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
@@ -22,16 +22,14 @@ function Login(){
 
         try {
             const response = await api.post("/auth/login", formData);
-
             console.log("Login Success:", response.data);
-
-            alert("Login Successful!");
-
-            // If the backend returns a token
-            if (response.data.token) {
-            localStorage.setItem("token", response.data.token);
+            // Save JWT token returned by the backend
+            if (response.data.data) {
+            localStorage.setItem("token", response.data.data);
             }
 
+            console.log("Saved Token:", localStorage.getItem("token"));
+            alert("Login Successful!");
             navigate("/");
         } catch (error) {
             console.log(error);

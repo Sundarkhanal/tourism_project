@@ -47,7 +47,11 @@ function Register() {
 
         console.log(response.data);
         alert("Registration Successful!");
-        navigate("/activate-account");
+        navigate("/activate-account", {
+            state: {
+                email: formData.email,
+            },
+        });
 
     } catch (error) {
         console.log(error);

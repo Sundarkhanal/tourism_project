@@ -1,14 +1,24 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { FaArrowLeft, FaLock } from "react-icons/fa";
 import api from "../../api/axios";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
+  const [token, setToken] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const urlToken = searchParams.get("token");
+    console.log("Token:", urlToken);
+
+    if (urlToken) {
+      setToken(urlToken);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,8 +33,8 @@ const ResetPassword = () => {
 
       // Replace with your backend endpoint
       await api.post("/auth/reset-password", {
-        password,
-        confirmPassword,
+        token,
+        newpassword: password,
       });
 
       alert("Password reset successfully.");
