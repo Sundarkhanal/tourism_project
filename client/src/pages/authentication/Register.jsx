@@ -46,10 +46,8 @@ function Register() {
         );
 
         console.log(response.data);
-
         alert("Registration Successful!");
-
-        navigate("/login");
+        navigate("/activate-account");
 
     } catch (error) {
         console.log(error);
@@ -95,26 +93,30 @@ return(
                         <input type="password" name="password" placeholder="Min. 6 characters" value={formData.password} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
                     </div>
                     <div>
-                        <label className=" mb-1 font-medium text-center text-gray-700">Phone</label>
-                        <input type="tel" name="phone" placeholder="98XXXXXXXX" value={formData.phone} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
+                        <label className=" mb-1 font-medium text-center text-gray-700">Confirm Password</label>
+                        <input type="password" name="confirmPassword" placeholder="Min. 6 characters" value={formData.confirmPassword} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
                     </div>
                     <div>
-                        <label className=" mb-1 font-medium text-center text-gray-700">Address</label>
-                        <input type="text" name="address" placeholder="Enter yourr address" value={formData.address} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
+                        <label className=" mb-1 font-medium text-center text-gray-700">Phone</label>
+                        <input type="tel" name="phone" placeholder="98XXXXXXXX" value={formData.phone} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
                     </div>
                     <div>
                         <label className=" mb-1 font-medium text-center text-gray-700">Gender</label>
                         <div className="flex gap-6">
                             <label className="flex items-center gap-2">
-                                <input type="radio" name="gender" value="Male" checked={formData.gender === "Male"} onChange={handleChange} />Male
+                                <input type="radio" name="gender" value="male" checked={formData.gender === "male"} onChange={handleChange} />Male
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="radio" name="gender" value="Female" checked={formData.gender === "Female"} onChange={handleChange} />Female
+                                <input type="radio" name="gender" value="female" checked={formData.gender === "female"} onChange={handleChange} />Female
                             </label>
                             <label className="flex items-center gap-2">
-                                <input type="radio" name="gender" value="Other" checked={formData.gender === "Other"} onChange={handleChange} />Other
+                                <input type="radio" name="gender" value="others" checked={formData.gender === "others"} onChange={handleChange} />Others
                             </label>
                         </div>
+                    </div>
+                    <div>
+                        <label className=" mb-1 font-medium text-center text-gray-700">Address</label>
+                        <input type="text" name="address" placeholder="Enter yourr address" value={formData.address} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
                     </div>
 
                     <button type="submit" className="w-full px-4 py-3 font-semibold text-white transition duration-300 rounded-2xl bg-teal-600 hover:bg-teal-700 shadow-lg">Create account</button>
@@ -129,4 +131,3 @@ return(
 }
 
 export default Register;
-

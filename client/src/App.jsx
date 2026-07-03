@@ -2,13 +2,17 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
-import Profile from "./pages/Profile";
+import Profile from "./pages/profile/Profile";
 import News from "./pages/News";
 import Blogs from "./pages/Blogs";
 import Destinations from "./pages/Destinations";
 import Layout from "./pages/components/Layout";
 import './App.css';
 import ForgotPassword from "./pages/authentication/forgotpassword";
+import ResetPassword from "./pages/authentication/resetpassword";
+import ActivateAccount from "./pages/authentication/ActivateAccount";
+import Logout from "./pages/profile/Logout";
+
 
 function App() {
  
@@ -26,7 +30,11 @@ function App() {
       </Route>
       <Route path="/register" element={<Register/>} />
       <Route path="/login" element={<Login/>} />
+      <Route path="/logout" element={<Logout/>} />
       <Route path="/forgotpassword" element={<ForgotPassword/>} />
+      <Route path="/resetpassword" element={<ResetPassword/>} />
+      <Route path="/activate-account" element={<ActivateAccount/>} />
+      
     </Routes>
     </BrowserRouter>
   )

@@ -30,7 +30,7 @@ const ForgotPassword = () => {
     <div className="relative min-h-screen bg-gray-100 overflow-hidden flex items-center justify-center px-4">
 
         {/* Card */}
-        <div className="w-full max-w-lg bg-white rounded-2xl border border-gray-200 shadow-xl py-12 px-8 md:p-20">
+        <div className="w-full max-w-lg bg-white rounded-2xl border border-gray-200 shadow-xl py-12 px-8 md:p-10">
           <h1 className="text-3xl font-bold">
             Forgot Password?
           </h1>

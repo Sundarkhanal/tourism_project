@@ -21,10 +21,7 @@ function Login(){
         e.preventDefault();
 
         try {
-            const response = await axios.post(
-            "http://localhost:9005/api/v1/auth/login",
-            formData
-            );
+            const response = await api.post("/auth/login", formData);
 
             console.log("Login Success:", response.data);
 
