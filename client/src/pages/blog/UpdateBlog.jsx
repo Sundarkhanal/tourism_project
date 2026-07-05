@@ -83,17 +83,6 @@ const UpdateBlog = ({ isOpen, onClose, blog, onUpdate }) => {
             />
           </div>
 
-          {/* Current Image Preview Fixed URL path */}
-          {blog.image && !image && (
-            <div>
-              <p className="text-sm text-gray-500 mb-2">Current Image:</p>
-              <img
-                src={`http://localhost:9005/assets/${blog.image}`}
-                alt="Current Preview"
-                className="w-full h-64 object-cover rounded-xl"
-              />
-            </div>
-          )}
 
           {/* New Preview */}
           {image && (

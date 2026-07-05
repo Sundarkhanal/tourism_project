@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { FaUser,FaSignOutAlt} from "react-icons/fa";
 import api from "../../api/axios";
@@ -11,7 +12,6 @@ const Profile = () => {
   const navigate = useNavigate();
 //  const token = "test-token";
   const token = localStorage.getItem("token");
-  console.log("Token:", localStorage.getItem("token"));
 
   const [activeTab, setActiveTab] = useState("favorites");
   const [user, setUser] = useState({});
@@ -22,13 +22,14 @@ const Profile = () => {
 
     const loadData = async () => {
       try {
-        const profileRes = await api.get("/user/profile");
-        setUser(profileRes.data);
+        // Get logged-in user
+        const profileRes = await api.get("/auth/me");
+        setUser(profileRes.data.data);
 
-        const favoriteRes = await api.get("/favorites");
-        setFavorites(favoriteRes.data);
+        // Get favorites (add later)
+        
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
 
@@ -36,8 +37,15 @@ const Profile = () => {
   }, [token]);
   
 
-   const logout = () => {
-    navigate("/logout");
+  const logout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      localStorage.removeItem("token");
+      navigate("/login");
+    }
   };
 
   // User not logged in
@@ -58,13 +66,13 @@ const Profile = () => {
             Sign in to access your profile, favorites, and personalized recommendations.
           </p>
 
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="flex items-center justify-center gap-3 w-fit mx-auto px-6 py-3 mt-8 font-semibold text-white rounded-2xl bg-teal-600 hover:bg-teal-700"
           >
             <FaUser />
             Sign In / Sign Up
-          </a>
+          </Link>
 
         </div>
       </div>

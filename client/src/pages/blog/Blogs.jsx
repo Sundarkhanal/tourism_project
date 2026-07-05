@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { FaCamera } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
-import { FaCamera, FaEllipsisH, FaTrash, FaEdit } from "react-icons/fa";
 import BlogCard from "./BlogCard";
 import CreateBlog from "./CreateBlog";
 import UpdateBlog from "./UpdateBlog";
@@ -12,16 +12,7 @@ const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const navigate = useNavigate();
 
-  const currentUser = JSON.parse(localStorage.getItem("user") || "null");
-
-  const handleShareStory = () => {
-  if (!currentUser) {
-    navigate("/login");
-    return;
-  }
-
-  setShowCreateBlog(true);
-};
+  const [currentUser, setCurrentUser] = useState(null);
 
   const fetchBlogs = useCallback(async () => {
     try {
@@ -34,7 +25,33 @@ const Blogs = () => {
 
   useEffect(() => {
     fetchBlogs();
+
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    const loadUser = async () => {
+      try {
+        const response = await api.get("/auth/me");
+        setCurrentUser(response.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadUser();
   }, [fetchBlogs]);
+  
+  const handleShareStory = () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    setShowCreateBlog(true);
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this story?")) return;
