@@ -7,9 +7,11 @@ const BlogCard = ({
   onDelete,
   onEdit,
 }) => {
+    console.log("createdAt:", blog.createdAt);
   const [activeMenu, setActiveMenu] = useState(null);
 
   const displayName = blog.user_id?.name || "Anonymous";
+  console.log("createdAt:", blog.createdAt);
 
   const isOwner =
     currentUser?._id &&
@@ -103,9 +105,9 @@ const BlogCard = ({
         </p>
 
         {blog.createdAt && (
-          <p className="text-xs text-gray-500 mt-1">
-            {new Date(blog.createdAt).toLocaleString()}
-          </p>
+            <p className="text-xs text-gray-500 mt-1">
+                {new Date(blog.createdAt).toLocaleString()}
+            </p>
         )}
       </div>
     </div>

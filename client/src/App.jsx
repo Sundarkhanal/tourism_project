@@ -11,7 +11,6 @@ import './App.css';
 import ForgotPassword from "./pages/authentication/forgotpassword";
 import ResetPassword from "./pages/authentication/resetpassword";
 import ActivateAccount from "./pages/authentication/ActivateAccount";
-import Logout from "./pages/profile/Logout";
 
 
 function App() {
@@ -30,7 +29,6 @@ function App() {
       </Route>
       <Route path="/register" element={<Register/>} />
       <Route path="/login" element={<Login/>} />
-      <Route path="/logout" element={<Logout/>} />
       <Route path="/forgotpassword" element={<ForgotPassword/>} />
       <Route path="/reset-password" element={<ResetPassword/>} />
       <Route path="/activate-account" element={<ActivateAccount/>} />
