@@ -1,12 +1,12 @@
 const multer = require("multer")
 const {CloudinaryStorage} = require("multer-storage-cloudinary")
-const { cloudinaryConfig } = require("../cloudinary.config") 
+const cloudinary = require("../config/cloudinary.config")
 
 
 const uploader = (type = 'image') => {
 
     const storageConfig = new CloudinaryStorage({
-        cloudinary:cloudinaryConfig,
+        cloudinary:cloudinary,
         params: {
             folder:"minor_project",
             allowed_formats: ['jpg', 'jpeg', 'png', 'svg', 'bmp', 'webp', 'gif'],
