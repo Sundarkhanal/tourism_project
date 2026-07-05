@@ -1,5 +1,6 @@
 import React from "react";
 import { FaHeart, FaUser } from "react-icons/fa";
+import api from "../../api/axios";
 
 const AccountDetails = ({
   user,
@@ -83,20 +84,6 @@ const AccountDetails = ({
 
           </div>
 
-          {/* Role */}
-
-          <div>
-
-            <label className="uppercase text-sm tracking-wider text-gray-500 font-semibold">
-              Role
-            </label>
-
-            <div className="mt-3 bg-gray-100 rounded-xl px-5 py-4 text-lg font-medium">
-              {user?.role || "User"}
-            </div>
-
-          </div>
-
           {/* Member Since */}
 
           <div>
@@ -107,6 +94,18 @@ const AccountDetails = ({
 
             <div className="mt-3 bg-gray-100 rounded-xl px-5 py-4 text-lg font-medium">
               {user?.joinedDate || "June 23, 2026"}
+            </div>
+
+          </div>
+
+          {/* edit profile button*/}
+
+          <div>
+
+            <div className="flex justify-center items-end md:h-full">
+              <button className="w-full md:w-auto bg-teal-700 hover:bg-teal-800 text-white font-medium px-6 py-4 rounded-xl shadow-lg">
+                Edit Profile
+              </button>
             </div>
 
           </div>
