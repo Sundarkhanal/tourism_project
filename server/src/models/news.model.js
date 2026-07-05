@@ -6,20 +6,20 @@ const NewsSchema = new mongoose.Schema({
         trim: true,
         required: true,
         min: 3,
-        max: 255,
+        max: 150,
     },
     description: {
         type: String,
         required: true,
         min: 10,
-        max: 200,
+        max: 255,
     },
     location: {
         type: String,
         trim: true,
         required: true,
     },
-    publisher_name: {
+    publisherName: {
         type: String,
         required: true,
         trim: true,

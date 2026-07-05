@@ -1,19 +1,18 @@
-const blogService = require("../services/blog.service")
+const newsService = require("../services/news.service")
 
-class BlogController{
-    createBlog = async(req, res, next) => {
+class NewsController{
+    createNews = async(req, res, next) => {
         try {
             const data = req.body
             
             if (req.file) {
                 data.image = req.file.filename
             }
-            data.user_id = req.loggedInUser._id
-            const blogData = await blogService.createBlog(data)
+            const newsData = await newsService.createNews(data)
 
             res.json({
-                data: blogService.getPublicBlogData(blogData),
-                message:"Blog Created Successfully!",
+                data: newsService.getPublicNewsData(newsData),
+                message:"News Created Successfully!",
                 status:"Ok"
             })
             
@@ -23,13 +22,20 @@ class BlogController{
         }
     }
 
-    listAllBlogs = async(req, res, next) => {
+    listAllNews = async(req, res, next) => {
         try {
-            const blogs = await blogService.listAllBlogs()
+            const allNews = await newsService.listAllNews()
+            if(!allNews){
+                throw{
+                    code:404,
+                    message:"News Not Found",
+                    status:"NOT_FOUND_ERR"
+                }
+            }
 
             res.json({
-                data: blogs.map(blog => blogService.getPublicBlogData(blog)),
-                message:"Blogs fetched Successfully",
+                data: allNews.map(news => newsService.getPublicNewsData(news)),
+                message:"News fetched Successfully",
                 status:"ok"
             })
             
@@ -61,10 +67,9 @@ class BlogController{
             next(exception)
         }
     }
-    updateBlog = async(req, res, next) => {
+    updateNews = async(req, res, next) => {
         try {
-            const id = req.params.blogId
-            // console.log(id);
+            const id = req.params.newsId
             
             const data = req.body
             if (req.file) {
@@ -74,9 +79,8 @@ class BlogController{
             const filter = {
                 _id: id
             }
-            // console.log(filter);
             
-            const updatedData = await blogService.updateSingleBlog(filter, data)
+            const updatedData = await newsService.updateSingleNews(filter, data)
 
             if (!updatedData) {
                 throw {
@@ -87,8 +91,8 @@ class BlogController{
             }
 
             res.json({
-                data: updatedData,
-                message:"Your Blog Updated Successfully!",
+                data: newsService.getPublicNewsData(updatedData),
+                message:"News Updated Successfully!",
                 status:"Ok"
             })
 
@@ -97,13 +101,13 @@ class BlogController{
             next(exception)
         }
     }
-    deleteBlog = async(req, res, next) => {
+    deleteNews = async(req, res, next) => {
         try {
-            const id = req.params.blogId
+            const id = req.params.newsId
             const filter = {
                 _id: id
             }
-            const deletedBlog = await blogService.deleteSingleBlog(filter)
+            const deletedBlog = await newsService.deleteSingleNews(filter)
             if (!deletedBlog) {
                 throw {
                     code: 404,
@@ -113,7 +117,7 @@ class BlogController{
             }
 
             res.json({
-                message:"Your Blog Deleted Successfully!",
+                message:"News Deleted Successfully!",
                 status:"Ok"
             })
         } catch (exception) {
@@ -123,4 +127,4 @@ class BlogController{
 }
 
 
-module.exports = new BlogController()
+module.exports = new NewsController()

@@ -181,6 +181,7 @@ class AuthController{
                     status:"INVALID_CREDENTIALS_ERR"
                 }
             }
+            //jwt.sign(payload, secretkey, options)
             const token = jwt.sign({sub:this.#userDetail._id}, appConfig.jwtSecret, {expiresIn:"1d"})
             res.cookie("Authorization", "Bearer "+token, {maxAge:24*60*60*1000, httpOnly: true})
             res.json({
