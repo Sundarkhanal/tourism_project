@@ -4,7 +4,7 @@ import Login from "./pages/authentication/Login";
 import Register from "./pages/authentication/Register";
 import Profile from "./pages/profile/Profile";
 import News from "./pages/News";
-import Blogs from "./pages/Blogs";
+import Blogs from "./pages/blog/Blogs";
 import Destinations from "./pages/Destinations";
 import Layout from "./pages/components/Layout";
 import './App.css';
