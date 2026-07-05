@@ -1,20 +1,16 @@
 const multer = require("multer")
-const fs = require("fs")
+const {CloudinaryStorage} = require("multer-storage-cloudinary")
+const { cloudinaryConfig } = require("../cloudinary.config") 
 
 
 const uploader = (type = 'image') => {
 
-    const storageConfig = multer.diskStorage({
-        destination: (req, file, cb) => {
-            const path = "./public/uploads"
-            if (!fs.existsSync(path)) {
-                fs.mkdirSync(path, {recursive: true})
-            }
-            cb(null, path)
-        },
-        filename: (req, file, cb) => {
-            const filename = Date.now()+"-"+file.originalname
-            cb(null, filename)
+    const storageConfig = new CloudinaryStorage({
+        cloudinary:cloudinaryConfig,
+        params: {
+            folder:"minor_project",
+            allowed_formats: ['jpg', 'jpeg', 'png', 'svg', 'bmp', 'webp', 'gif'],
+            resource_type: type
         }
     })
     const customFileFilter = (req, file, cb) => {
