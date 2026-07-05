@@ -57,45 +57,6 @@ const ProfileSidebar = ({
         </div>
       </div>
 
-      {/* Activity Card */}
-      <div className="bg-white rounded-2xl shadow-md border p-6">
-
-        <h3 className="text-2xl font-bold mb-5">
-          Activity
-        </h3>
-
-        <div className="flex justify-between items-center pb-4 border-b">
-
-          <div className="flex items-center gap-3">
-            <FaHeart className="text-red-400 text-lg" />
-            <span className="text-gray-600 text-lg">
-              Favorites
-            </span>
-          </div>
-
-          <span className="font-bold text-2xl">
-            {favoriteCount}
-          </span>
-
-        </div>
-
-        <div className="flex justify-between items-center pt-4">
-
-          <div className="flex items-center gap-3">
-            <FaMapMarkerAlt className="text-teal-600 text-lg" />
-            <span className="text-gray-600 text-lg">
-              Posts
-            </span>
-          </div>
-
-          <span className="font-bold text-2xl">
-            {postCount}
-          </span>
-
-        </div>
-
-      </div>
-
       {/* Account Card */}
       <div className="bg-white rounded-2xl shadow-md border p-6">
 
@@ -126,9 +87,8 @@ const ProfileSidebar = ({
 
       </div>
 
-      {/* Logout Button */}
-      
 
+    
     </div>
   );
 };

@@ -76,44 +76,44 @@ const Profile = () => {
     <div className="min-h-screen bg-gray-100 py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6">
-  <ProfileSidebar
-    user={user}
-    favoriteCount={favorites.length}
-    postCount={0}
-  />
+          <ProfileSidebar
+            user={user}
+            favoriteCount={favorites.length}
+            postCount={0}
+          />
 
-  <div>
-    {activeTab === "favorites" ? (
-      <Favorites
-        favorites={favorites}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        removeFavorite={() => {}}  //dummy function         ...............................
-      />
-    ) : (
-      <AccountDetails
-        user={user}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        favoriteCount={favorites.length}
-      />
-    )}
-  </div>
-</div>
+          <div className="max-w-3xl w-full">
+            {activeTab === "favorites" ? (
+              <Favorites
+                favorites={favorites}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                removeFavorite={() => {}}  //dummy function         ...............................
+              />
+            ) : (
+              <AccountDetails
+                user={user}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                favoriteCount={favorites.length}
+              />
+            )}
+          </div>
+        </div>
 
-{/* Sign Out Button */}
-<div className="mt-6">
-  <button
-      onClick={logout}
-      className="w-fit px-26 py-3 border border-red-300 text-red-600 font-medium 
-                 rounded-lg flex items-center justify-center gap-2 
-                 hover:bg-red-50 transition
-                 "
-    >
-      <FaSignOutAlt />
-      Sign Out
-    </button>
-</div>
+        {/* Sign Out Button */}
+        <div className="mt-6">
+          <button
+              onClick={logout}
+              className="w-fit px-26 py-3 border border-red-300 text-red-600 font-medium 
+                        rounded-lg flex items-center justify-center gap-2 
+                        hover:bg-red-50 transition
+                        "
+            >
+              <FaSignOutAlt />
+              Sign Out
+            </button>
+        </div>
       </div>
     </div>
   );
