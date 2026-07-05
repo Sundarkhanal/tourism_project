@@ -6,7 +6,7 @@ class BlogController{
             const data = req.body
             
             if (req.file) {
-                data.image = req.file.filename
+                data.image = req.file.path
             }
             data.user_id = req.loggedInUser._id
             const blogData = await blogService.createBlog(data)
@@ -68,7 +68,7 @@ class BlogController{
             
             const data = req.body
             if (req.file) {
-                data.image = req.file.filename
+                data.image = req.file.path
             }
 
             const filter = {
