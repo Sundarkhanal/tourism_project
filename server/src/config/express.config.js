@@ -37,7 +37,7 @@ app.use(express.urlencoded({
 
 mongoInitialize()
 //static middleware
-app.use("assets/", express.static('./public/uploads/'))
+app.use("/assets/", express.static('./public/uploads/'))
 
 app.use("/api/v1", router)
 
