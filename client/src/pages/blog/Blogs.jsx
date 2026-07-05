@@ -98,7 +98,7 @@ const Blogs = () => {
             </div>
           ) : (
             /* Feed List */
-            <div className="max-w-xl mx-auto space-y-6">
+            <div className="max-w-xl mx-auto space-y-8">
               {blogs.map((blog) => (
                 <BlogCard
                   key={blog._id}

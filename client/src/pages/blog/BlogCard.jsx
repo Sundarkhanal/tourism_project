@@ -7,7 +7,7 @@ const BlogCard = ({
   onDelete,
   onEdit,
 }) => {
-    console.log("createdAt:", blog.createdAt);
+    
   const [activeMenu, setActiveMenu] = useState(null);
 
   const displayName = blog.user_id?.name || "Anonymous";
@@ -89,7 +89,7 @@ const BlogCard = ({
       {/* Image */}
       {blog.image && (
         <img
-          src={`http://localhost:9005/assets/${blog.image}`}
+          src={`${blog.image}`}
           alt="Travel"
           className="w-full h-96 object-cover"
         />
