@@ -11,6 +11,7 @@ import './App.css';
 import ForgotPassword from "./pages/authentication/forgotpassword";
 import ResetPassword from "./pages/authentication/resetpassword";
 import ActivateAccount from "./pages/authentication/ActivateAccount";
+import DestinationDetails from "./pages/destination/DestinationDetails";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/news" element={<News/>} />
         <Route path="/blogs" element={<Blogs/>} />
         <Route path="/destinations" element={<Destinations/>} />
+        <Route path="/destination/:id" element={<DestinationDetails />} />
 
       </Route>
       <Route path="/register" element={<Register/>} />

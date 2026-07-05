@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FaSearch,
   FaHeart,
@@ -21,17 +22,7 @@ const initialDestinations = [
       "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=900",
     favorite: true,
   },
-  
 ];
-
-// const [destinationsData, setDestinationsData] = useState([]);
-
-// useEffect(() => {
-//   axios
-//     .get("")
-//     .then((res) => setDestinationsData(res.data))
-//     .catch((err) => console.log(err));
-// }, []);
 
 const cities = [
   "All",
@@ -47,10 +38,16 @@ const categories = [
   "All Categories",
   "Heritage Site",
   "Restaurant",
-
 ];
 
 function Destinations() {
+  const navigate = useNavigate();
+
+  // ✅ FIX 1: navigation function inside component (correct)
+  const handleViewDetails = (id) => {
+    navigate(`/destination/${id}`);
+  };
+
   const [search, setSearch] = useState("");
   const [selectedCity, setSelectedCity] = useState("All");
   const [selectedCategory, setSelectedCategory] =
@@ -71,16 +68,16 @@ function Destinations() {
 
     return matchSearch && matchCity && matchCategory;
   });
-  
+
   const toggleFavorite = (id) => {
-  setDestinationsData((prev) =>
-    prev.map((place) =>
-      place.id === id
-        ? { ...place, favorite: !place.favorite }
-        : place
-    )
-  );
-};
+    setDestinationsData((prev) =>
+      prev.map((place) =>
+        place.id === id
+          ? { ...place, favorite: !place.favorite }
+          : place
+      )
+    );
+  };
 
   return (
     <section className="bg-[#faf9f7] py-6 px-6 min-h-screen">
@@ -93,29 +90,42 @@ function Destinations() {
         <p className="text-gray-600 mt-2">
           Discover the beauty of Nepal by city and category
         </p>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-9">
 
           <div className="relative lg:col-span-8">
             <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
 
+            {/* ✅ FIX 2: connect search */}
             <input
               type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search destinations..."
               className="w-full border rounded-xl py-1 pl-14 pr-4 border-gray-200 shadow outline-none focus:ring-1 focus:ring-teal-700"
             />
           </div>
 
+          {/* ✅ FIX 3: city select works */}
           <div className="lg:col-span-2">
-            <select className="w-full border rounded-xl py-1 px-4 border-gray-200 shadow bg-white cursor-pointer ">
+            <select
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+              className="w-full border rounded-xl py-1 px-4 border-gray-200 shadow bg-white cursor-pointer "
+            >
               <option>All</option>
               <option>Kathmandu</option>
               <option>Pokhara</option>
             </select>
           </div>
 
+          {/* ✅ FIX 4: category select works */}
           <div className="lg:col-span-2">
-            <select className="w-full border rounded-xl py-1 px-4 border-gray-200 shadow bg-white cursor-pointer">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full border rounded-xl py-1 px-4 border-gray-200 shadow bg-white cursor-pointer"
+            >
               <option>All Categories</option>
               <option>Heritage Site</option>
               <option>Restaurant</option>
@@ -123,7 +133,6 @@ function Destinations() {
           </div>
 
         </div>
-
 
         <div className="flex gap-3 overflow-x-auto py-8">
 
@@ -145,131 +154,126 @@ function Destinations() {
 
         </div>
 
+        {/* Cards */}
+        {filteredDestinations.length > 0 ? (
 
-{/* Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-3 gap-3">
 
-{filteredDestinations.length > 0 ? (
+            {filteredDestinations.map((place) => (
 
-  <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-3 gap-3">
+              <div
+                key={place.id}
+                className="bg-white rounded-2xl shadow-sm overflow-hidden border-gray-200 shadow"
+              >
 
-    {filteredDestinations.map((place) => (
+                <div className="relative">
 
-      <div
-        key={place.id}
-        className="bg-white rounded-2xl shadow-sm overflow-hidden border-gray-200 shadow"
-      >
+                  <img
+                    src={place.image}
+                    alt={place.name}
+                    className="overflow:hidden w-full h-64 object-cover transition-transform duration-700 hover:scale-110"
+                  />
 
-        <div className="relative">
+                  <span className="absolute top-4 left-4 bg-teal-700 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    {place.category}
+                  </span>
 
-          <img
-            src={place.image}
-            alt={place.name}
-            className="overflow:hidden w-full h-64 object-cover transition-transform duration-700 hover:scale-110"
-          />
+                  <button
+                    onClick={() => toggleFavorite(place.id)}
+                    className={`absolute top-4 right-4 w-12 h-12 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-300
+                      ${
+                        place.favorite
+                          ? "bg-red-500"
+                          : "bg-white"
+                      }
+                    `}
+                  >
+                    {place.favorite ? (
+                      <FaHeart className="text-white text-xl" />
+                    ) : (
+                      <FaRegHeart className="text-gray-700 text-xl" />
+                    )}
+                  </button>
 
-          <span
-            className="absolute top-4 left-4 bg-teal-700 text-white px-3 py-1 rounded-full text-sm font-semibold"
-          >
-            {place.category}
-          </span>
+                </div>
 
-          <button
-            onClick={() => toggleFavorite(place.id)}
-            className={`absolute top-4 right-4 w-12 h-12 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-300
-              ${
-                place.favorite
-                  ? "bg-red-500"
-                  : "bg-white"
-              }
-            `}
-          >
-            {place.favorite ? (
-              <FaHeart className="text-white text-xl" />
-            ) : (
-              <FaRegHeart className="text-gray-700 text-xl" />
-            )}
-          </button>
+                <div className="p-5">
 
-        </div>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {place.name}
+                  </h2>
 
-        <div className="p-5">
+                  <div className="flex items-center gap-2 text-gray-500 mt-2">
+                    <FaMapMarkerAlt className="text-teal-700" />
+                    <span>{place.city}</span>
+                  </div>
 
-          <h2 className="text-2xl font-bold text-gray-900">
-            {place.name}
-          </h2>
+                  <p className="text-gray-600 mt-4 leading-relaxed">
+                    {place.description}
+                  </p>
 
-          <div className="flex items-center gap-2 text-gray-500 mt-2">
-            <FaMapMarkerAlt className="text-teal-700" />
-            <span>{place.city}</span>
+                  <div className="flex items-center justify-between mt-5">
+
+                    <div className="flex items-center gap-2">
+                      <FaStar className="text-yellow-400" />
+                      <span className="font-semibold">
+                        {place.rating}
+                      </span>
+                    </div>
+
+                    <span className="font-semibold text-gray-700">
+                      {place.price}
+                    </span>
+
+                  </div>
+
+                  {/* ✅ FIX 5: correct navigation */}
+                  <button
+                    onClick={() => handleViewDetails(place.id)}
+                    className="w-full mt-6 border border-gray-300 rounded-xl py-3 flex items-center justify-center gap-2 hover:bg-teal-700 hover:text-white transition"
+                  >
+                    View Details
+                    <FaArrowRight />
+                  </button>
+
+                </div>
+
+              </div>
+
+            ))}
+
           </div>
 
-          <p className="text-gray-600 mt-4 leading-relaxed">
-            {place.description}
-          </p>
+        ) : (
 
+          <div className="flex flex-col items-center justify-center py-24">
 
-          <div className="flex items-center justify-between mt-5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-16 h-16 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M7 12h10M10 18h4"
+              />
+            </svg>
 
-            <div className="flex items-center gap-2">
-              <FaStar className="text-yellow-400" />
-              <span className="font-semibold">
-                {place.rating}
-              </span>
-            </div>
+            <h2 className="text-3xl font-semibold text-gray-600 mt-6">
+              No destinations found
+            </h2>
 
-            <span className="font-semibold text-gray-700">
-              {place.price}
-            </span>
+            <p className="text-gray-500 mt-2">
+              Try adjusting your filters
+            </p>
 
           </div>
 
-          <button
-            className="w-full mt-6 border border-gray-300 rounded-xl py-3 flex items-center justify-center gap-2 hover:bg-teal-700 hover:text-white transition"
-          >
-            View Details
-            <FaArrowRight />
-          </button>
-
-        </div>
-
-      </div>
-
-    ))}
-
-  </div>
-
-) : (
-
-  <div className="flex flex-col items-center justify-center py-24">
-
-    {/* Icon */}
-
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-16 h-16 text-gray-400"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M4 6h16M7 12h10M10 18h4"
-      />
-    </svg>
-
-    <h2 className="text-3xl font-semibold text-gray-600 mt-6">
-      No destinations found
-    </h2>
-
-    <p className="text-gray-500 mt-2">
-      Try adjusting your filters
-    </p>
-
-  </div>
-
-)}
+        )}
 
       </div>
 
