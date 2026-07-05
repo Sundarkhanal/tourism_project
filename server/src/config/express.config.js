@@ -14,7 +14,11 @@ app.use(cors({
 }));
 
 //for xss policy
-app.use(helmet())
+app.use(helmet({
+    crossOriginResourcePolicy:{
+        policy:"cross-origin"
+    }
+}))
 
 const limiter = rateLimit({
     windowMs: 1*60*100,

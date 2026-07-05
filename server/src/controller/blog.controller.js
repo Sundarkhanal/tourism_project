@@ -53,7 +53,7 @@ class BlogController{
                 }
             }
             res.json({
-                data: data,
+                data: blogService.getPublicBlogData(data),
                 message:"Blog Detail",
                 status:"Ok"
             })
@@ -87,7 +87,7 @@ class BlogController{
             }
 
             res.json({
-                data: updatedData,
+                data: blogService.getPublicBlogData(updatedData),
                 message:"Your Blog Updated Successfully!",
                 status:"Ok"
             })
