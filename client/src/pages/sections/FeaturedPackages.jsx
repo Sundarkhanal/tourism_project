@@ -17,8 +17,8 @@ const packages = [
 
 const FeaturedPackages = () => {
   return (
-    <section className="py-16 px-6 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-16 bg-[#faf8fe]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="text-center mb-12">
           <p className="uppercase tracking-widest text-teal-700 font-medium">

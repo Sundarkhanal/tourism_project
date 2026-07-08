@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { FaUser,FaSignOutAlt} from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaUser, FaSignOutAlt } from "react-icons/fa";
 import api from "../../api/axios";
 
 import ProfileSidebar from "./ProfileSidebar";
@@ -10,15 +9,19 @@ import AccountDetails from "./AccountDetails";
 
 const Profile = () => {
   const navigate = useNavigate();
-//  const token = "test-token";
   const token = localStorage.getItem("token");
 
   const [activeTab, setActiveTab] = useState("favorites");
   const [user, setUser] = useState({});
   const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!token) return;
+    // If no token, redirect to login
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
     const loadData = async () => {
       try {
@@ -30,12 +33,18 @@ const Profile = () => {
         
       } catch (error) {
         console.error(error);
+        // If token is invalid, redirect to login
+        if (error.response?.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
     loadData();
-  }, [token]);
-  
+  }, [token, navigate]);
 
   const logout = async () => {
     try {
@@ -44,42 +53,23 @@ const Profile = () => {
       console.error(err);
     } finally {
       localStorage.removeItem("token");
-      navigate("/login");
+      navigate("/");
     }
   };
 
-  // User not logged in
-  if (!token) {
+  // Show loading state while checking authentication
+  if (loading) {
     return (
-      <div className="min-h-screen bg-[#f8f8f6] flex items-center justify-center px-4">
-        <div className="text-center max-w-lg">
-
-          <div className="w-36 h-36 mx-auto rounded-full bg-[#dce4df] flex items-center justify-center">
-            <FaUser className="text-[#23796f] text-5xl" />
-          </div>
-
-          <h1 className="mt-8 text-3xl font-bold text-slate-900">
-            Welcome to BaatoSanjal
-          </h1>
-
-          <p className="mt-4 text-lg text-slate-600">
-            Sign in to access your profile, favorites, and personalized recommendations.
-          </p>
-
-          <Link
-            to="/login"
-            className="flex items-center justify-center gap-3 w-fit mx-auto px-6 py-3 mt-8 font-semibold text-white rounded-2xl bg-teal-600 hover:bg-teal-700"
-          >
-            <FaUser />
-            Sign In / Sign Up
-          </Link>
-
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading profile...</p>
         </div>
       </div>
     );
   }
 
-  // User logged in
+  // User logged in - show profile
   return (
     <div className="min-h-screen bg-gray-100 py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -96,7 +86,7 @@ const Profile = () => {
                 favorites={favorites}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
-                removeFavorite={() => {}}  //dummy function         ...............................
+                removeFavorite={() => {}}  //dummy function
               />
             ) : (
               <AccountDetails
@@ -112,15 +102,14 @@ const Profile = () => {
         {/* Sign Out Button */}
         <div className="mt-6">
           <button
-              onClick={logout}
-              className="w-fit px-26 py-3 border border-red-300 text-red-600 font-medium 
-                        rounded-lg flex items-center justify-center gap-2 
-                        hover:bg-red-50 transition
-                        "
-            >
-              <FaSignOutAlt />
-              Sign Out
-            </button>
+            onClick={logout}
+            className="w-fit px-6 py-3 border border-red-300 text-red-600 font-medium 
+                      rounded-lg flex items-center justify-center gap-2 
+                      hover:bg-red-50 transition"
+          >
+            <FaSignOutAlt />
+            Sign Out
+          </button>
         </div>
       </div>
     </div>

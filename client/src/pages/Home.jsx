@@ -4,13 +4,14 @@ import FeaturedPackages from "./sections/FeaturedPackages";
 import Hero from "./sections/Hero";
 import ReviewsStories from "./sections/Reviews";
 import TopDestinations from "./sections/TopDestinations";
+
 function Home() {
   return (
     <>
-        <Hero/>
-        <TopDestinations/>
-        <FeaturedPackages/>
-        <ReviewsStories/>
+      <Hero/>
+      <TopDestinations/>
+      <FeaturedPackages/>
+      <ReviewsStories/>
     </>
   );
 }

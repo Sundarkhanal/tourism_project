@@ -38,17 +38,15 @@ const News = () => {
   const normalNews = news.filter((item) => !item.featured);
 
   return (
-    <section className="bg-gray-50 py-6 px-6 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-
-        {/* Heading */}
+    <section className="bg-color-background py-6 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="flex items-center gap-3 text-4xl font-bold">
+          <h1 className="flex items-center gap-3 text-4xl font-bold text-color-foreground">
             <FaNewspaper className="text-teal-700" />
             Travel News
           </h1>
-          <p className="text-gray-600 mt-2">
-            Latest updates and tourism news.
+          <p className="text-color-foreground/70 mt-2">
+            Latest updates, and news about Nepal tourism
           </p>
         </div>
 

@@ -80,7 +80,7 @@ function Destinations() {
   };
 
   return (
-    <section className="bg-[#faf9f7] py-6 px-6 min-h-screen">
+    <section className="bg-color-background py-6 px-6 min-h-screen">
       <div className="max-w-7xl mx-auto px-4">
 
         <h1 className="flex items-center gap-3 text-4xl font-bold">
