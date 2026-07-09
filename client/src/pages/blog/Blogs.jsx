@@ -66,11 +66,12 @@ const Blogs = () => {
 
   return (
     <>
-      <section className="bg-gray-50 py-0 mb-6 min-h-screen">
-        <div className="w-full">
-          {/* Hero Header */}
-          <div className="bg-gradient-to-r from-teal-800 via-emerald-700 to-yellow-500 py-6 md:py-8 mb-10 shadow-lg px-4">
-            <div className="max-w-xl mx-auto flex flex-row items-center justify-between gap-4 w-full">
+      <section className="bg-color-background min-h-screen">
+      <div className="w-full">
+        {/* Hero Header */}
+        <div className="bg-gradient-to-r from-teal-800 via-emerald-700 to-yellow-500 py-6 md:py-8 my-6 shadow-lg">
+          <div className="max-w-2xl mx-auto flex flex-row items-center justify-between gap-4 w-full">
+
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold text-white">Travel Feed</h1>
                 <p className="text-white/90 mt-1 text-sm md:text-base">Discover Nepal through real traveler stories</p>
@@ -86,7 +87,7 @@ const Blogs = () => {
 
           {/* Empty State */}
           {blogs.length === 0 ? (
-            <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-md p-16 text-center">
+            <div className="max-w-2xl mx-auto bg-color-card rounded-2xl shadow-md p-16 text-center">
               <div className="text-6xl mb-4">📝</div>
               <h2 className="text-3xl font-bold text-gray-800">No Stories Yet</h2>
               <button
@@ -98,7 +99,7 @@ const Blogs = () => {
             </div>
           ) : (
             /* Feed List */
-            <div className="max-w-xl mx-auto space-y-8">
+            <div className="max-w-2xl mx-auto space-y-8">
               {blogs.map((blog) => (
                 <BlogCard
                   key={blog._id}

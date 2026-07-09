@@ -5,11 +5,9 @@ import { FaMapMarkedAlt, FaCompass } from "react-icons/fa";
 
 function Hero() {
   return (
-    <section
-        className="relative min-h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url(${hero})` }}
+    <section className="relative min-h-screen bg-cover bg-center" 
+      style={{ backgroundImage: `url(${hero})` }}
     >
-      {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 min-h-screen">
         <div className="max-w-4xl">
 

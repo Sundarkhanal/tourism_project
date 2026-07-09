@@ -7,9 +7,9 @@ const BlogCard = ({
   onDelete,
   onEdit,
 }) => {
+
     
   const [activeMenu, setActiveMenu] = useState(null);
-
   const displayName = blog.user_id?.name || "Anonymous";
   console.log("createdAt:", blog.createdAt);
 
@@ -19,7 +19,7 @@ const BlogCard = ({
       String(blog.user_id?._id || blog.user_id);
 
   return (
-    <div className="bg-white rounded-3xl shadow-md overflow-hidden">
+    <div className="bg-color-card rounded-3xl shadow-md overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4">
         <div className="flex items-center gap-2">
@@ -104,11 +104,13 @@ const BlogCard = ({
           {blog.description}
         </p>
 
-        {blog.createdAt && (
-            <p className="text-xs text-gray-500 mt-1">
-                {new Date(blog.createdAt).toLocaleString()}
-            </p>
-        )}
+        <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider">
+          {new Date(parseInt(blog._id.substring(0, 8), 16) * 1000).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}        
+        </p>
       </div>
     </div>
   );

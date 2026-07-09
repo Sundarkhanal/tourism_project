@@ -1,6 +1,5 @@
 import React from "react";
 import { FaHeart, FaUser } from "react-icons/fa";
-import api from "../../api/axios";
 
 const AccountDetails = ({
   user,

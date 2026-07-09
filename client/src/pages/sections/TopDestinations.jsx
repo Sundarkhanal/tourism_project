@@ -24,11 +24,11 @@ const TopDestinations = () => {
   }, []);
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16">
-      {/* Header */}
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      {/* Header - aligned with logo position */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-end mb-10 gap-4">
         <div>
-          <p className="text-teal-700 text-sm uppercase font-semibold tracking-wider">
+          <p className="text-teal-700 text-sm uppercase tracking-wide">
             Popular Picks
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold mt-2">

@@ -37,8 +37,8 @@ const ReviewsStories = () => {
   }, []);
 
   return (
-    <section className="bg-[#f8f6f3] py-16 px-6">
-      <div className="max-w-7xl mx-auto">
+    <section className="bg-color-background py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="text-center mb-14">
           <p className="uppercase tracking-widest text-teal-700 font-medium">
@@ -55,13 +55,13 @@ const ReviewsStories = () => {
           {reviews.map((item) => (
             <div
               key={item._id}
-              className="bg-white border border-gray-200 rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300"
+              className="bg-color-card border border-gray-200 rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300"
             >
               {/* Quote */}
-              <FaQuoteLeft className="text-3xl text-gray-100 mb-4" />
+              <FaQuoteLeft className="text-3xl text-gray-200 mb-4" />
 
               {/* Review */}
-              <p className="text-gray-700 leading-8 min-h-[145px]">
+              <p className="text-color-foreground/80 leading-8 min-h-[145px]">
                 {item.review}
               </p>
 
