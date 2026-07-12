@@ -7,6 +7,7 @@ import News from "./pages/News";
 import Blogs from "./pages/blog/Blogs";
 import Destinations from "./pages/Destinations";
 import Layout from "./pages/components/Layout";
+import Chatbot from "./pages/sections/Chatbot";
 import './App.css';
 import ForgotPassword from "./pages/authentication/forgotpassword";
 import ResetPassword from "./pages/authentication/resetpassword";
@@ -26,6 +27,7 @@ function App() {
         <Route path="/news" element={<News/>} />
         <Route path="/blogs" element={<Blogs/>} />
         <Route path="/destinations" element={<Destinations/>} />
+        <Route path="/chatbot" element={<Chatbot/>} />
         <Route path="/destination/:id" element={<DestinationDetails />} />
 
       </Route>
