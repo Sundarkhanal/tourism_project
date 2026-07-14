@@ -56,7 +56,7 @@ class DestinationController {
     getDetailById = async (req, res, next) => {
         try {
 
-            const id = req.params.destinationId;
+            const id = req.params.destId;
 
             const filter = {
                 _id: id
@@ -86,7 +86,7 @@ class DestinationController {
     updateDestination = async (req, res, next) => {
         try {
 
-            const id = req.params.destinationId;
+            const id = req.params.destId;
             const data = req.body;
 
             if (req.file) {
@@ -134,7 +134,7 @@ class DestinationController {
     deleteDestination = async (req, res, next) => {
         try {
 
-            const id = req.params.destinationId;
+            const id = req.params.destId;
 
             const filter = {
                 _id: id
