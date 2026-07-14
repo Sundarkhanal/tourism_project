@@ -2,13 +2,14 @@ import React from "react";
 import hero from "../../assets/hero.png";
 import logo from "../../assets/logo.png";
 import { FaMapMarkedAlt, FaCompass } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-function Hero() {
+function Hero({ onDiscover }) {
   return (
     <section className="relative min-h-screen bg-cover bg-center" 
       style={{ backgroundImage: `url(${hero})` }}
     >
-      <div className="relative z-10 max-w-7xl mx-auto px-6 min-h-screen">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center">
         <div className="max-w-4xl">
 
           {/* Main Heading */}
@@ -32,7 +33,7 @@ function Hero() {
           {/* Buttons */}
           <div className="mt-10 flex flex-col sm:flex-row gap-4">
 
-            <button
+            <button onClick={onDiscover}
               className="
                 flex items-center justify-center gap-3
                 bg-teal-600 text-white
@@ -47,7 +48,7 @@ function Hero() {
               Discover Nearby Sites
             </button>
 
-            <button
+            <Link to="/destinations"
               className="
                 flex items-center justify-center gap-3
                 px-8 py-4
@@ -62,7 +63,7 @@ function Hero() {
             >
               <FaCompass />
               Explore Destinations
-            </button>
+            </Link>
 
           </div>
         </div>

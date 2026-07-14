@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import logo from "../../assets/logo.png";
 
@@ -11,7 +12,6 @@ import {
 const Footer = () => {
   return (
     <footer className="bg-[#071923] text-white">
-      {/* Add the same max-width and padding as navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Brand Section */}
@@ -39,23 +39,58 @@ const Footer = () => {
             </h3>
 
             <ul className="space-y-2 text-gray-300 text-base">
-              <li className="hover:text-white cursor-pointer transition">
-                Home
+              <li>
+                <Link
+                  to="/"
+                  className="hover:text-white transition"
+                >
+                  Home
+                </Link>
               </li>
-              <li className="hover:text-white cursor-pointer transition">
-                Destinations
+
+              <li>
+                <Link
+                  to="/destinations"
+                  className="hover:text-white transition"
+                >
+                  Destinations
+                </Link>
               </li>
-              <li className="hover:text-white cursor-pointer transition">
-                Travel Blog
+
+              <li>
+                <Link
+                  to="/blogs"
+                  className="hover:text-white transition"
+                >
+                  Travel Blog
+                </Link>
               </li>
-              <li className="hover:text-white cursor-pointer transition">
-                Travel News
+
+              <li>
+                <Link
+                  to="/news"
+                  className="hover:text-white transition"
+                >
+                  Travel News
+                </Link>
               </li>
-              <li className="hover:text-white cursor-pointer transition">
-                AI Assistant
+
+              <li>
+                <Link
+                  to="/chatbot"
+                  className="hover:text-white transition"
+                >
+                  AI Assistant
+                </Link>
               </li>
-              <li className="hover:text-white cursor-pointer transition">
-                My Profile
+
+              <li>
+                <Link
+                  to="/profile"
+                  className="hover:text-white transition"
+                >
+                  My Profile
+                </Link>
               </li>
             </ul>
           </div>
