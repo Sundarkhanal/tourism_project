@@ -6,6 +6,7 @@ import api from "../../api/axios";
 import ProfileSidebar from "./ProfileSidebar";
 import Favorites from "./Favorites";
 import AccountDetails from "./AccountDetails";
+import AddReviews from "./AddReviews";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -78,17 +79,30 @@ const Profile = () => {
             user={user}
             favoriteCount={favorites.length}
             postCount={0}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
           />
 
           <div className="max-w-3xl w-full">
-            {activeTab === "favorites" ? (
+            {activeTab === "favorites" && (
               <Favorites
                 favorites={favorites}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
-                removeFavorite={() => {}}  //dummy function
+                removeFavorite={() => {}}
               />
-            ) : (
+            )}
+            
+            {activeTab === "addReview" && (
+              <AddReviews
+                user={user} 
+                activeTab={activeTab} 
+                setActiveTab={setActiveTab} 
+                favoriteCount={favorites.length} 
+              />
+            )}
+
+            {activeTab === "account" && (
               <AccountDetails
                 user={user}
                 activeTab={activeTab}
@@ -96,6 +110,8 @@ const Profile = () => {
                 favoriteCount={favorites.length}
               />
             )}
+
+            
           </div>
         </div>
 

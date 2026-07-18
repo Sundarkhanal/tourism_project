@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHeart, FaUser } from "react-icons/fa";
+import { FaHeart, FaUser, FaPen } from "react-icons/fa"; 
 
 const AccountDetails = ({
   user,
@@ -31,6 +31,18 @@ const AccountDetails = ({
         </button>
 
         <button
+          onClick={() => setActiveTab("addReview")}
+          className={`flex items-center gap-2 pb-4 whitespace-nowrap transition ${
+            activeTab === "addReview"
+              ? "text-teal-700 border-b-2 border-teal-700"
+              : "text-gray-500 hover:text-teal-700"
+          }`}
+        >
+          <FaPen />
+          Write Review
+        </button>
+
+        <button
           onClick={() => setActiveTab("account")}
           className={`flex items-center gap-2 pb-4 whitespace-nowrap transition ${
             activeTab === "account"
@@ -42,6 +54,7 @@ const AccountDetails = ({
 
           Account Details
         </button>
+        
 
       </div>
 
