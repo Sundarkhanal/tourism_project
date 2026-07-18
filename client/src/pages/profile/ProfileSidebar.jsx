@@ -5,12 +5,16 @@ import {
   FaEnvelope,
   FaCalendarAlt,
   FaShieldAlt,
+  FaPen,
+  FaUser,
 } from "react-icons/fa";
 
 const ProfileSidebar = ({
   user,
   favoriteCount = 0,
   postCount = 0,
+  activeTab,
+  setActiveTab,
 }) => {
   return (
     <div className="space-y-6">

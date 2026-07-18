@@ -1,44 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { FaQuoteLeft, FaStar, FaRegStar } from "react-icons/fa";
+import axios from "axios";
+import {
+  FaQuoteLeft,
+  FaStar,
+  FaRegStar,
+  FaArrowLeft,
+  FaArrowRight,
+} from "react-icons/fa";
 
 const ReviewsStories = () => {
   const [reviews, setReviews] = useState([]);
+  const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    // fetch
-
-    // dummy data
-    setReviews([
-      {
-        _id: 1,
-        name: "Marco Rossi",
-        location: "Pokhara",
-        review:
-          "Used the chatbot to plan my entire 10-day itinerary. It suggested Bandipur which wasn't even on my radar - turned out to be the highlight of my trip!",
-        rating: 5,
-      },
-      {
-        _id: 2,
-        name: "James Wilson",
-        location: "Everest Region",
-        review:
-          "Great app for first-time visitors to Nepal. The emergency contacts section gave me peace of mind during my solo trekking adventure.",
-        rating: 4,
-      },
-      {
-        _id: 3,
-        name: "Sarah Chen",
-        location: "Kathmandu",
-        review:
-          "Firantey made my Nepal trip so much easier! Found amazing hidden temples near my hotel that I would never have discovered otherwise.",
-        rating: 5,
-      },
-    ]);
+    fetchReviews();
   }, []);
+
+  const fetchReviews = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/reviews");
+      setReviews(res.data);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  const totalSlides = Math.max(1, Math.ceil(reviews.length / 2));
+
+  const nextSlide = () => {
+    setCurrent((prev) =>
+      prev === totalSlides - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevSlide = () => {
+    setCurrent((prev) =>
+      prev === 0 ? totalSlides - 1 : prev - 1
+    );
+  };
 
   return (
     <section className="bg-color-background py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Heading */}
         <div className="text-center mb-14">
           <p className="uppercase tracking-widest text-teal-700 font-medium">
@@ -50,60 +53,102 @@ const ReviewsStories = () => {
           </h2>
         </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-5">
-          {reviews.map((item) => (
-            <div
-              key={item._id}
-              className="bg-color-card border border-gray-200 rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300"
-            >
-              {/* Quote */}
-              <FaQuoteLeft className="text-3xl text-gray-200 mb-4" />
+        {reviews.length === 0 ? (
+          <div className="text-center py-10 text-gray-500">
+            No reviews yet.
+          </div>
+        ) : (
+          <>
+            {/* Slider */}
+            <div className="relative overflow-hidden">
+              {/* Left Button */}
+              <button
+                onClick={prevSlide}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-gray-100 hover:bg-gray-200 w-12 h-12 rounded-full flex items-center justify-center"
+              >
+                <FaArrowLeft />
+              </button>
 
-              {/* Review */}
-              <p className="text-color-foreground/80 leading-8 min-h-[145px]">
-                {item.review}
-              </p>
+              {/* Cards */}
+              <div
+                className="flex transition-transform duration-500"
+                style={{
+                  transform: `translateX(-${current * 100}%)`,
+                }}
+              >
+                {Array.from({ length: totalSlides }).map((_, slideIndex) => (
+                  <div
+                    key={slideIndex}
+                    className="min-w-full grid grid-cols-1 md:grid-cols-2 gap-6 px-14"
+                  >
+                    {reviews
+                      .slice(slideIndex * 2, slideIndex * 2 + 2)
+                      .map((item) => (
+                        <div
+                          key={item._id}
+                          className="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full"
+                        >
+                          <FaQuoteLeft className="text-3xl text-gray-200 mb-4" />
 
-              {/* Bottom */}
-              <div className="mt-0 flex items-end justify-between">
-                <div className="flex items-center gap-3">
-                  {/* Avatar */}
-                  <div className="w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center text-[#1b8a78] font-semibold">
-                    {item.name.charAt(0)}
+                          <p className="text-gray-700 leading-relaxed flex-1 text-sm">
+                            "{item.review}"
+                          </p>
+
+                          <div className="mt-5 pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-semibold text-base">
+                                {item.name?.charAt(0)}
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-gray-900 text-base">
+                                  {item.name}
+                                </h4>
+                                <p className="text-gray-500 text-xs">
+                                  {item.location}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex gap-0.5">
+                              {[1, 2, 3, 4, 5].map((star) =>
+                                star <= item.rating ? (
+                                  <FaStar key={star} className="text-yellow-400 text-sm" />
+                                ) : (
+                                  <FaRegStar key={star} className="text-gray-300 text-sm" />
+                                )
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                   </div>
-
-                  {/* Name */}
-                  <div>
-                    <h4 className="font-semibold text-lg text-gray-900">
-                      {item.name}
-                    </h4>
-                    <p className="text-gray-500 text-sm">
-                      {item.location}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Rating */}
-                <div className="flex gap-1">
-                  {[1, 2, 3, 4, 5].map((star) =>
-                    star <= item.rating ? (
-                      <FaStar
-                        key={star}
-                        className="text-yellow-400 text-sm"
-                      />
-                    ) : (
-                      <FaRegStar
-                        key={star}
-                        className="text-gray-300 text-sm"
-                      />
-                    )
-                  )}
-                </div>
+                ))}
               </div>
+
+              {/* Right Button */}
+              <button
+                onClick={nextSlide}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-gray-100 hover:bg-gray-200 w-12 h-12 rounded-full flex items-center justify-center"
+              >
+                <FaArrowRight />
+              </button>
             </div>
-          ))}
-        </div>
+
+            {/* Dots */}
+            <div className="flex justify-center gap-3 mt-10">
+              {Array.from({ length: totalSlides }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrent(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    current === index
+                      ? "w-8 bg-teal-600"
+                      : "w-2 bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

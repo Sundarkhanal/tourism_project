@@ -1,5 +1,6 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import api from "../api/axios"; 
 import {
   FaSearch,
   FaHeart,
@@ -9,70 +10,46 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 
-const initialDestinations = [
-  {
-    id: 1,
-    name: "Mero ghar",
-    city: "Lalitpur",
-    category: "Heritage Site",
-    rating: 4.0,
-    description: "Beautiful heritage place with traditional architecture.",
-    price: "0",
-    image:
-      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=900",
-    favorite: true,
-  },
-];
-
-const cities = [
-  "All",
-  "Kathmandu",
-  "Bhaktapur",
-  "Pokhara",
-  "Lalitpur",
-  "Chitwan",
-  "Lumbini",
-];
-
-const categories = [
-  "All Categories",
-  "Heritage Site",
-  "Restaurant",
-];
-
 function Destinations() {
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [selectedCity, setSelectedCity] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("All Categories");
+  const [destinationsData, setDestinationsData] = useState([]);
 
-  // ✅ FIX 1: navigation function inside component (correct)
+  // Regions from backend
+  const cities = ["All", ...new Set(destinationsData.map((d) => d.region))];
+
+  useEffect(() => {
+    fetchDestinations();
+  }, []);
+
+  const fetchDestinations = async () => {
+    try {
+      setLoading(true);
+      const { data } = await api.get("/destination/all-destinations");
+      setDestinationsData(data.data || []);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredDestinations = destinationsData.filter(
+    (item) =>
+      item.name.toLowerCase().includes(search.toLowerCase()) &&
+      (selectedCity === "All" || item.region === selectedCity)
+  );
+
   const handleViewDetails = (id) => {
     navigate(`/destination/${id}`);
   };
 
-  const [search, setSearch] = useState("");
-  const [selectedCity, setSelectedCity] = useState("All");
-  const [selectedCategory, setSelectedCategory] =
-    useState("All Categories");
-  const [destinationsData, setDestinationsData] =
-    useState(initialDestinations);
-
-  const filteredDestinations = destinationsData.filter((item) => {
-    const matchSearch =
-      item.name.toLowerCase().includes(search.toLowerCase());
-
-    const matchCity =
-      selectedCity === "All" || item.city === selectedCity;
-
-    const matchCategory =
-      selectedCategory === "All Categories" ||
-      item.category === selectedCategory;
-
-    return matchSearch && matchCity && matchCategory;
-  });
-
   const toggleFavorite = (id) => {
     setDestinationsData((prev) =>
       prev.map((place) =>
-        place.id === id
+        place._id === id
           ? { ...place, favorite: !place.favorite }
           : place
       )
@@ -96,7 +73,6 @@ function Destinations() {
           <div className="relative lg:col-span-8">
             <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
 
-            {/* ✅ FIX 2: connect search */}
             <input
               type="text"
               value={search}
@@ -106,29 +82,29 @@ function Destinations() {
             />
           </div>
 
-          {/* ✅ FIX 3: city select works */}
           <div className="lg:col-span-2">
             <select
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
               className="w-full border rounded-xl py-1 px-4 border-gray-200 shadow bg-white cursor-pointer "
             >
-              <option>All</option>
-              <option>Kathmandu</option>
-              <option>Pokhara</option>
+              {cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* ✅ FIX 4: category select works */}
           <div className="lg:col-span-2">
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full border rounded-xl py-1 px-4 border-gray-200 shadow bg-white cursor-pointer"
-            >
-              <option>All Categories</option>
-              <option>Heritage Site</option>
-              <option>Restaurant</option>
+            ><option>Category Coming Soon</option>
+{/*               
+-------------------------------------cat required here
+               */}
             </select>
           </div>
 
@@ -162,24 +138,27 @@ function Destinations() {
             {filteredDestinations.map((place) => (
 
               <div
-                key={place.id}
+                key={place._id}
                 className="bg-white rounded-2xl shadow-sm overflow-hidden border-gray-200 shadow"
               >
-
                 <div className="relative">
-
                   <img
-                    src={place.image}
+                    src={
+                      place.image
+                        ? `http://localhost:9005/${place.image}`
+                        : "https://via.placeholder.com/400x300?text=No+Image"
+                    }
                     alt={place.name}
-                    className="overflow:hidden w-full h-64 object-cover transition-transform duration-700 hover:scale-110"
+                    className="w-full h-64 object-cover transition-transform duration-700 hover:scale-110"
                   />
 
                   <span className="absolute top-4 left-4 bg-teal-700 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    {place.category}
+                    {/* {place.category} */}
+                    Tourist Destination
                   </span>
 
                   <button
-                    onClick={() => toggleFavorite(place.id)}
+                    onClick={() => toggleFavorite(place._id)}
                     className={`absolute top-4 right-4 w-12 h-12 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-300
                       ${
                         place.favorite
@@ -205,14 +184,14 @@ function Destinations() {
 
                   <div className="flex items-center gap-2 text-gray-500 mt-2">
                     <FaMapMarkerAlt className="text-teal-700" />
-                    <span>{place.city}</span>
+                    <span>{place.region}</span>
                   </div>
 
                   <p className="text-gray-600 mt-4 leading-relaxed">
                     {place.description}
                   </p>
 
-                  <div className="flex items-center justify-between mt-5">
+                  {/* <div className="flex items-center justify-between mt-5">
 
                     <div className="flex items-center gap-2">
                       <FaStar className="text-yellow-400" />
@@ -221,15 +200,10 @@ function Destinations() {
                       </span>
                     </div>
 
-                    <span className="font-semibold text-gray-700">
-                      {place.price}
-                    </span>
+                  </div> */}
 
-                  </div>
-
-                  {/* ✅ FIX 5: correct navigation */}
                   <button
-                    onClick={() => handleViewDetails(place.id)}
+                    onClick={() => handleViewDetails(place._id)}
                     className="w-full mt-6 border border-gray-300 rounded-xl py-3 flex items-center justify-center gap-2 hover:bg-teal-700 hover:text-white transition"
                   >
                     View Details

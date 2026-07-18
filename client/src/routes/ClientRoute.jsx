@@ -6,6 +6,7 @@ import Profile from "../pages/profile/Profile";
 import News from "../pages/News";
 import Blogs from "../pages/blog/Blogs";
 import Destinations from "../pages/Destinations";
+import Chatbot from "../pages/Chatbot";
 import DestinationDetails from "../pages/destination/DestinationDetails";
 
 import Login from "../pages/authentication/Login";
@@ -24,6 +25,7 @@ export default function ClientRoutes() {
                 <Route path="/news" element={<News />} />
                 <Route path="/blogs" element={<Blogs />} />
                 <Route path="/destinations" element={<Destinations />} />
+                <Route path="/chatbot" element={<Chatbot />} />
                 <Route path="/destination/:id" element={<DestinationDetails />} />
             </Route>
 
