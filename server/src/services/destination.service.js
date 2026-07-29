@@ -6,9 +6,7 @@ class DestinationService {
         try {
 
             const createdDestination = new DestinationModel(data);
-
             await createdDestination.save();
-
             return createdDestination;
 
         } catch (exception) {
