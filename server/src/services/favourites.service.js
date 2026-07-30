@@ -5,7 +5,7 @@ class FavoriteService {
         try {
             const existingData = await FavoriteModel.findOne(data)
             if (existingData) {
-                await FavoriteModel.findByIdAndDeleteI(existingData._id)
+                await FavoriteModel.findByIdAndDelete(existingData._id)
 
                 return{
                     favorite: false,

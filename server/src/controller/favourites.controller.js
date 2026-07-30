@@ -4,18 +4,21 @@ const favouritesService = require("../services/favourites.service")
 class FavoriteController{
     createFavourite = async(req, res, next) => {
         try {
-            const user_id = req.loggedInUser.user_id
-            const destId = req.params.destId
+            const user_id = req.loggedInUser._id;
+            const destId = req.params.destId;
+
             const favoriteData = {
-                user_id,
-                destinationId: destId
-            }
+                user_id: user_id,
+                destination_id: destId
+            };
             
             const data = await favouritesService.saveFavorite(favoriteData)
             res.json({
+                data:data,
                 status : "Ok"
             })
         } catch (exception) {
+            console.log(exception);
             next(exception)
         }
     }

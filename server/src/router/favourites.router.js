@@ -3,7 +3,8 @@ const checkPermission = require("../middlewares/auth.middleware")
 const favouriteCtrl = require("../controller/favourites.controller")
 
 
-favouritesRouter.post("/:destId",checkPermission(), favouriteCtrl.createFavourite )
+favouritesRouter.post("/:destId", checkPermission(), favouriteCtrl.createFavourite )
+favouritesRouter.get("/all-favorites", checkPermission(), favouriteCtrl.getAllFavourites)
 
 
 
