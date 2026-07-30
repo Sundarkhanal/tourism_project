@@ -1,11 +1,12 @@
 import React from "react";
-import { FaHeart, FaUser, FaPen } from "react-icons/fa"; 
+import { FaHeart, FaUser,FaSignOutAlt, FaPen } from "react-icons/fa"; 
 
 const AccountDetails = ({
   user,
   activeTab,
   setActiveTab,
   favoriteCount = 0,
+  onLogout,
 }) => {
   return (
     <div className="bg-white rounded-2xl shadow-md border">
@@ -111,25 +112,23 @@ const AccountDetails = ({
           </div>
 
           {/* edit profile button*/}
-
           <div>
 
-            <div className="flex justify-center items-end md:h-full">
-              <button className="w-full md:w-auto bg-teal-700 hover:bg-teal-800 text-white font-medium px-6 py-4 rounded-xl shadow-lg">
-                Edit Profile
+            <div className="flex justify-end items-end md:h-full">
+              <button
+                onClick={onLogout} 
+                className="w-fit px-6 py-3 border border-red-300 text-red-600 font-medium 
+                rounded-lg flex items-center justify-center gap-2 
+                hover:bg-red-50 transition"
+              >
+                <FaSignOutAlt />
+                Sign Out
               </button>
             </div>
 
           </div>
 
         </div>
-
-        <hr className="my-8" />
-
-        <p className="text-gray-500 leading-7">
-          Profile information is managed through your account settings.
-          Contact support if you need to update your name or email address.
-        </p>
 
       </div>
 
