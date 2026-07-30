@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaSignOutAlt } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import api from "../../api/axios";
 
 import ProfileSidebar from "./ProfileSidebar";
@@ -108,24 +108,12 @@ const Profile = () => {
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 favoriteCount={favorites.length}
+                onLogout={logout}
               />
             )}
 
             
           </div>
-        </div>
-
-        {/* Sign Out Button */}
-        <div className="mt-6">
-          <button
-            onClick={logout}
-            className="w-fit px-6 py-3 border border-red-300 text-red-600 font-medium 
-                      rounded-lg flex items-center justify-center gap-2 
-                      hover:bg-red-50 transition"
-          >
-            <FaSignOutAlt />
-            Sign Out
-          </button>
         </div>
       </div>
     </div>
