@@ -11,8 +11,8 @@ import DestinationDetails from "../pages/destination/DestinationDetails";
 
 import Login from "../pages/authentication/Login";
 import Register from "../pages/authentication/Register";
-import ForgotPassword from "../pages/authentication/ForgotPassword";
-import ResetPassword from "../pages/authentication/ResetPassword";
+import ForgotPassword from "../pages/authentication/forgotpassword";
+import ResetPassword from "../pages/authentication/resetpassword";
 import ActivateAccount from "../pages/authentication/ActivateAccount";
 
 export default function ClientRoutes() {
