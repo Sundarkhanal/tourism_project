@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+
 import ProfileSidebar from "./ProfileSidebar";
 import Favorites from "./Favorites";
 import AccountDetails from "./AccountDetails";
@@ -25,7 +26,6 @@ const Profile = () => {
       try {
         setLoading(true);
 
-        // Get logged-in user
         const profileRes = await api.get("/auth/me");
 
         const currentUser =
@@ -37,57 +37,15 @@ const Profile = () => {
 
         setUser(currentUser);
 
-        const currentUserId =
-          currentUser?._id || currentUser?.id;
-
-        if (!currentUserId) {
-          console.error("Logged-in user ID was not found");
-          setFavorites([]);
-          return;
-        }
-
-        // Get all destinations
-        const destinationRes = await api.get(
-          "/destination/all-destinations"
+        const savedFavorites = JSON.parse(
+          localStorage.getItem("favorites") || "[]"
         );
 
-        const allDestinations =
-          destinationRes.data?.data?.destinations ||
-          destinationRes.data?.destinations ||
-          destinationRes.data?.data ||
-          destinationRes.data ||
-          [];
-
-        const destinationList = Array.isArray(allDestinations)
-          ? allDestinations
-          : [];
-
-        const storageKey = `favoriteIds_${currentUserId}`;
-        const savedFavoriteIds = localStorage.getItem(storageKey);
-
-        let favoriteIds = [];
-
-        if (savedFavoriteIds) {
-          try {
-            const parsedIds = JSON.parse(savedFavoriteIds);
-
-            favoriteIds = Array.isArray(parsedIds)
-              ? parsedIds.map(String)
-              : [];
-          } catch (error) {
-            console.error(
-              "Could not read saved favorite IDs:",
-              error
-            );
-          }
-        }
-
-        const savedDestinations = destinationList.filter(
-          (destination) =>
-            favoriteIds.includes(String(destination._id))
+        setFavorites(
+          Array.isArray(savedFavorites)
+            ? savedFavorites
+            : []
         );
-
-        setFavorites(savedDestinations);
       } catch (error) {
         console.error(
           "Profile loading error:",
@@ -114,41 +72,31 @@ const Profile = () => {
       return;
     }
 
-    const currentUserId = user?._id || user?.id;
+    const updatedFavorites = favorites.filter((favorite) => {
+      const savedDestination = favorite?.destination_id;
 
-    if (!currentUserId) {
-      alert("User ID not found");
-      return;
-    }
+      const savedId =
+        savedDestination &&
+        typeof savedDestination === "object"
+          ? savedDestination._id
+          : savedDestination || favorite?._id;
+
+      return String(savedId) !== id;
+    });
+
+    setFavorites(updatedFavorites);
+
+    localStorage.setItem(
+      "favorites",
+      JSON.stringify(updatedFavorites)
+    );
 
     try {
       await api.post(`/favourites/${id}`);
-
-      const updatedFavorites = favorites.filter(
-        (favorite) => String(favorite?._id) !== id
-      );
-
-      setFavorites(updatedFavorites);
-
-      const updatedFavoriteIds = updatedFavorites
-        .map((favorite) => favorite?._id)
-        .filter(Boolean)
-        .map(String);
-
-      localStorage.setItem(
-        `favoriteIds_${currentUserId}`,
-        JSON.stringify(updatedFavoriteIds)
-      );
     } catch (error) {
       console.error(
-        "Remove favorite error:",
+        "Remove favorite API error:",
         error.response?.data || error.message
-      );
-
-      alert(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Could not remove favorite"
       );
     }
   };

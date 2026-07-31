@@ -18,7 +18,19 @@ function Destinations() {
     useState("All Categories");
 
   const [destinationsData, setDestinationsData] = useState([]);
-  const [favoriteIds, setFavoriteIds] = useState([]);
+  const [favoriteIds, setFavoriteIds] = useState(() => {
+    try {
+      const savedFavorites = JSON.parse(
+        localStorage.getItem("favorites") || "[]"
+      );
+
+      return Array.isArray(savedFavorites)
+        ? savedFavorites.map((item) => String(item._id))
+        : [];
+    } catch {
+      return [];
+    }
+  });
   const [userId, setUserId] = useState("");
 
   const [loading, setLoading] = useState(true);
@@ -59,34 +71,6 @@ function Destinations() {
 
       setUserId(String(currentUserId));
 
-      try {
-        const favoriteResponse = await api.get(
-          `/favourites/${currentUserId}`
-        );
-
-        const favorites =
-          favoriteResponse.data?.data ||
-          favoriteResponse.data?.favourites ||
-          favoriteResponse.data ||
-          [];
-
-        if (Array.isArray(favorites)) {
-          const ids = favorites.map((favorite) =>
-            String(
-              favorite.destination_id?._id ||
-                favorite.destination_id
-            )
-          );
-
-          setFavoriteIds(ids);
-        }
-      } catch (favoriteError) {
-        console.log(
-          "Could not load existing favourites:",
-          favoriteError.response?.data ||
-            favoriteError.message
-        );
-      }
     } catch (error) {
       console.error(
         "Page loading error:",
@@ -110,54 +94,42 @@ function Destinations() {
     navigate(`/destination/${id}`);
   };
 
-const toggleFavorite = async (destinationId) => {
-  const id = String(destinationId || "");
-
-  if (!id) {
-    alert("Destination ID not found");
-    return;
-  }
-
-  if (!userId) {
-    alert("Please login first");
-    return;
-  }
+const toggleFavorite = async (place) => {
+  const id = String(place._id);
 
   if (favoriteLoadingId === id) return;
 
-  const isFavorite = favoriteIds.includes(id);
+  const savedFavorites = JSON.parse(
+    localStorage.getItem("favorites") || "[]"
+  );
+
+  const isFavorite = savedFavorites.some(
+    (item) => String(item._id) === id
+  );
+
+  const updatedFavorites = isFavorite
+    ? savedFavorites.filter(
+        (item) => String(item._id) !== id
+      )
+    : [...savedFavorites, place];
+
+  localStorage.setItem(
+    "favorites",
+    JSON.stringify(updatedFavorites)
+  );
+
+  setFavoriteIds(
+    updatedFavorites.map((item) => String(item._id))
+  );
 
   setFavoriteLoadingId(id);
 
   try {
-    const formData = new FormData();
-
-    formData.append("destination_id", id);
-    formData.append("user_id", userId);
-
-    const response = await api.post(
-      `/favourites/${id}`,
-      formData
-    );
-
-    console.log("Favourite response:", response.data);
-
-    setFavoriteIds((previous) =>
-      isFavorite
-        ? previous.filter(
-            (favoriteId) => favoriteId !== id
-          )
-        : [...new Set([...previous, id])]
-    );
+    await api.post(`/favourites/${id}`);
   } catch (error) {
-    console.error(
-      "Favourite error:",
+    console.log(
+      "Favourite API error:",
       error.response?.data || error.message
-    );
-
-    alert(
-      error.response?.data?.message ||
-        "Favourite update failed"
     );
   } finally {
     setFavoriteLoadingId("");
@@ -275,15 +247,20 @@ const toggleFavorite = async (destinationId) => {
 
                     <button
                       type="button"
-                      onClick={() => toggleFavorite(place._id)}
-                      disabled={favoriteLoadingId === String(place._id)}
+                      onClick={() => toggleFavorite(place)
+                      }
+                      disabled={isFavoriteLoading}
                       className={`absolute top-4 right-4 w-12 h-12 rounded-full shadow-lg flex items-center justify-center cursor-pointer ${
-                        favoriteIds.includes(String(place._id))
+                        isFavorite
                           ? "bg-red-500"
                           : "bg-white"
+                      } ${
+                        isFavoriteLoading
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
                       }`}
                     >
-                      {favoriteIds.includes(String(place._id)) ? (
+                      {isFavorite ? (
                         <FaHeart className="text-white text-xl" />
                       ) : (
                         <FaRegHeart className="text-gray-700 text-xl" />
