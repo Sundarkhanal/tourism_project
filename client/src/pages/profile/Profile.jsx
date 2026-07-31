@@ -9,7 +9,6 @@ import AddReviews from "./AddReviews";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
   const [activeTab, setActiveTab] = useState("favorites");
   const [user, setUser] = useState({});
@@ -17,11 +16,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
     const loadData = async () => {
       try {
         setLoading(true);
@@ -62,7 +56,7 @@ const Profile = () => {
     };
 
     loadData();
-  }, [token, navigate]);
+  }, [navigate]);
 
   const removeFavorite = async (destinationId) => {
     const id = String(destinationId || "");

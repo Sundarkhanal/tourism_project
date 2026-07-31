@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
 import Layout from "../pages/components/Layout";
 import Home from "../pages/Home";
@@ -20,12 +21,15 @@ export default function ClientRoutes() {
         <Routes>
             <Route element={<Layout />}>
                 <Route path="/" element={<Home />} />
-                <Route path="/profile" element={<Profile />} />
                 <Route path="/news" element={<News />} />
                 <Route path="/blogs" element={<Blogs />} />
                 <Route path="/destinations" element={<Destinations />} />
-                <Route path="/chatbot" element={<Chatbot />} />
                 <Route path="/destination/:id" element={<DestinationDetails />} />
+
+                <Route element={<ProtectedRoute />}>
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/chatbot" element={<Chatbot />} />
+                </Route>
             </Route>
 
             <Route path="/login" element={<Login />} />
