@@ -4,43 +4,10 @@ import {
   FaMapMarkerAlt,
   FaStar,
   FaArrowLeft,
-  FaLocationArrow,
-  FaRegNewspaper,
 } from "react-icons/fa";
+import api from "../../api/axios";
 
-// Dummy data
-const dummyDestinations = [
-  {
-    id: 1,
-    name: "Mero Ghar",
-    city: "Lalitpur",
-    category: "Heritage Site",
-    rating: 4,
-    description:
-      "Beautiful heritage place with traditional architecture and cultural importance.",
-    price: "0",
-    image:
-      "https://images.unsplash.com/photo-1505691723518-36a5ac3b2c1a?w=1200",
-    coordinates: "536.0000, 1220.0000",
-    blogPosts: [
-      {
-        title: "Why visit Mero Ghar?",
-        excerpt: "It is one of the most beautiful heritage places...",
-      },
-      {
-        title: "History of the site",
-        excerpt: "This place has deep cultural roots...",
-      },
-    ],
-    nearby: [
-      {
-        name: "Patan Durbar Square",
-        category: "Heritage Site",
-        rating: 4.7,
-      },
-    ],
-  },
-];
+
 
 const DestinationDetails = () => {
   const { id } = useParams();
@@ -50,12 +17,36 @@ const DestinationDetails = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const found = dummyDestinations.find(
-      (item) => item.id === parseInt(id)
-    );
+    const fetchDestination = async () => {
+      try {
+        setLoading(true);
 
-    setDestination(found);
-    setLoading(false);
+        const response = await api.get(
+          `/destination/${id}`
+        );
+
+        console.log("Destination response:", response.data);
+
+        const destinationData =
+          response.data?.data?.destination ||
+          response.data?.destination ||
+          response.data?.data ||
+          response.data;
+
+        setDestination(destinationData);
+      } catch (error) {
+        console.error(
+          "Destination loading error:",
+          error.response?.data || error.message
+        );
+
+        setDestination(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDestination();
   }, [id]);
 
   if (loading) {
@@ -76,27 +67,27 @@ const DestinationDetails = () => {
 
   const {
     name,
-    city,
-    category,
-    rating,
+    region,
     description,
-    price,
     image,
+    latitude,
+    longitude,
+    category = "Tourist Destination",
+    rating = 0,
+    price = "0",
     blogPosts = [],
-    coordinates,
-    nearby = [],
   } = destination;
 
   const stars = Math.round(rating || 0);
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-[#faf9f7] pb-16 lg:pb-20">
 
       {/* BACK BUTTON */}
-      <div className="max-w-6xl mx-auto px-4 pt-6">
+      <div className="max-w-6xl mx-auto px-4 pt-8">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-gray-700 hover:text-black"
+          className="flex items-center gap-2 text-gray-700 hover:text-black hover:!bg-transparent"
         >
           <FaArrowLeft />
           Back to Destinations
@@ -107,7 +98,10 @@ const DestinationDetails = () => {
       <div className="max-w-6xl mx-auto px-4 mt-4">
         <div className="relative w-full h-[350px] rounded-2xl overflow-hidden">
           <img
-            src={image}
+            src={image
+              ? `http://localhost:9005/${image}`
+              : "https://via.placeholder.com/1200x500?text=No+Image"
+            }
             alt={name}
             className="w-full h-full object-cover"
           />
@@ -123,7 +117,7 @@ const DestinationDetails = () => {
 
             <div className="flex items-center gap-2 text-sm mt-1">
               <FaMapMarkerAlt />
-              {city}
+              {region}
 
               <FaStar className="text-yellow-400 ml-2" />
               {rating}/5
@@ -171,42 +165,6 @@ const DestinationDetails = () => {
               ))}
             </div>
           </div>
-
-          {/* NEARBY */}
-          <div className="bg-white p-5 rounded-xl border border-gray-100">
-            <h2 className="text-lg font-semibold mb-4">
-              Nearby Sites in {city}
-            </h2>
-
-            {nearby.map((site, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full">
-                    <FaMapMarkerAlt className="text-teal-600" />
-                  </div>
-
-                  <div>
-                    <h3 className="font-medium text-sm">{site.name}</h3>
-
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs bg-yellow-400 text-black px-2 py-0.5 rounded-full">
-                        {site.category}
-                      </span>
-
-                      <span className="text-xs text-gray-600">
-                        ⭐ {site.rating}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <FaLocationArrow className="text-gray-400" />
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* RIGHT SIDE */}
@@ -217,8 +175,8 @@ const DestinationDetails = () => {
             <h2 className="font-semibold mb-4">Quick Info</h2>
 
             <div className="flex justify-between text-sm mb-2">
-              <span>City</span>
-              <span>{city}</span>
+              <span>Region</span>
+              <span>{region}</span>
             </div>
 
             <div className="flex justify-between text-sm mb-2">
@@ -246,12 +204,12 @@ const DestinationDetails = () => {
           <div className="bg-white p-5 rounded-xl shadow-sm">
             <h2 className="font-semibold mb-2">Getting There</h2>
             <p className="text-sm text-gray-600">
-              Located in {city}, Nepal. Accessible by taxi, public bus,
+              Located in {region}, Nepal. Accessible by taxi, public bus,
               or private vehicle.
             </p>
 
             <p className="text-xs text-gray-400 mt-2">
-              📍 {coordinates}
+              📍 {latitude}, {longitude}
             </p>
           </div>
 
