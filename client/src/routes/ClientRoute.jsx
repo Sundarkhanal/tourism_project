@@ -18,7 +18,6 @@ import ActivateAccount from "../pages/authentication/ActivateAccount";
 export default function ClientRoutes() {
     return (
         <Routes>
-
             <Route element={<Layout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/profile" element={<Profile />} />

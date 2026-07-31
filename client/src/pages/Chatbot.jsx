@@ -1,42 +1,109 @@
+import React, { useState } from "react";
+import {
+  FaArrowUp,
+  FaMicrophone,
+  FaVolumeHigh,
+} from "react-icons/fa6";
+
 function Chatbot() {
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!message.trim()) return;
+
+    setMessages([
+      ...messages,
+      {
+        id: Date.now(),
+        text: message.trim(),
+      },
+    ]);
+
+    setMessage("");
+  };
+
+  const readAloud = (text) => {
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(
+      new SpeechSynthesisUtterance(text)
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 py-12">
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div className="min-h-screen bg-[#fafafa] px-4 py-10">
+      <div className="mx-auto flex min-h-[80vh] max-w-4xl flex-col">
+        <div className="flex flex-1 flex-col items-center justify-center">
+          {messages.length === 0 && (
+            <div className="mb-10 text-center">
+              <h1 className="text-4xl font-semibold text-gray-900">
+                Meet Bato AI
+              </h1>
 
-        {/* Header */}
-        <div className="bg-teal-600 text-white text-center py-6">
-          <h1 className="text-3xl font-bold">🤖 Bato AI Assistant</h1>
-          <p className="text-teal-100 mt-1">
-            Your smart travel companion for Nepal
-          </p>
+              <p className="mt-3 text-gray-500">
+                Ask detailed questions for better travel responses
+              </p>
+            </div>
+          )}
+
+          {messages.length > 0 && (
+            <div className="mb-6 flex w-full flex-1 flex-col gap-4 overflow-y-auto">
+              {messages.map((chatMessage) => (
+                <div
+                  key={chatMessage.id}
+                  className="ml-auto max-w-[80%]"
+                >
+                  <div className="rounded-3xl bg-gray-200 px-5 py-3">
+                    {chatMessage.text}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => readAloud(chatMessage.text)}
+                    className="ml-auto mt-1 flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
+                    aria-label="Read aloud"
+                  >
+                    <FaVolumeHigh />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Chat Area */}
-        <div className="h-[450px] flex items-center justify-center bg-gray-50">
-          <div className="text-center">
-            <h2 className="text-2xl font-semibold text-gray-700">
-              Start a Conversation
-            </h2>
-            <p className="text-gray-500 mt-2">
-              Ask about destinations, hotels, trekking routes,
-              or travel tips in Nepal.
-            </p>
-          </div>
-        </div>
-
-        {/* Input */}
-        <div className="border-t bg-white p-5 flex gap-3">
+        <form
+          onSubmit={handleSubmit}
+          className="mx-auto flex w-full max-w-3xl items-center gap-3 rounded-[30px] border border-gray-300 bg-white px-5 py-3 shadow-lg"
+        >
           <input
             type="text"
-            placeholder="Ask Bato AI anything..."
-            className="flex-1 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            value={message}
+            onChange={(event) => setMessage(event.target.value)}
+            placeholder="Ask Bato AI anything"
+            className="min-w-0 flex-1 bg-transparent outline-none"
           />
 
-          <button className="bg-teal-600 hover:bg-teal-700 text-white px-6 rounded-xl transition">
-            Send
+          <button
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100"
+          >
+            <FaMicrophone />
           </button>
-        </div>
 
+          <button
+            type="submit"
+            disabled={!message.trim()}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-white disabled:bg-gray-300"
+          >
+            <FaArrowUp />
+          </button>
+        </form>
+
+        <p className="mt-3 text-center text-xs text-gray-400">
+          Bato AI can make mistakes. Check important travel information.
+        </p>
       </div>
     </div>
   );

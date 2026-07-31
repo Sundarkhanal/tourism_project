@@ -1,36 +1,97 @@
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import api from "../api/axios"; 
+import api from "../api/axios";
 import {
   FaSearch,
   FaHeart,
   FaRegHeart,
   FaMapMarkerAlt,
-  FaStar,
   FaArrowRight,
 } from "react-icons/fa";
 
 function Destinations() {
   const navigate = useNavigate();
+
   const [search, setSearch] = useState("");
   const [selectedCity, setSelectedCity] = useState("All");
-  const [selectedCategory, setSelectedCategory] = useState("All Categories");
-  const [destinationsData, setDestinationsData] = useState([]);
+  const [selectedCategory, setSelectedCategory] =
+    useState("All Categories");
 
-  // Regions from backend
-  const cities = ["All", ...new Set(destinationsData.map((d) => d.region))];
+  const [destinationsData, setDestinationsData] = useState([]);
+  const [favoriteIds, setFavoriteIds] = useState([]);
+  const [userId, setUserId] = useState("");
+
+  const [loading, setLoading] = useState(true);
+  const [favoriteLoadingId, setFavoriteLoadingId] = useState("");
+
+  const cities = [
+    "All",
+    ...new Set(destinationsData.map((destination) => destination.region)),
+  ];
 
   useEffect(() => {
-    fetchDestinations();
+    loadPage();
   }, []);
 
-  const fetchDestinations = async () => {
+  const loadPage = async () => {
     try {
       setLoading(true);
-      const { data } = await api.get("/destination/all-destinations");
-      setDestinationsData(data.data || []);
+
+      const destinationResponse = await api.get(
+        "/destination/all-destinations"
+      );
+
+      setDestinationsData(destinationResponse.data?.data || []);
+
+      const userResponse = await api.get("/auth/me");
+
+      const currentUser =
+        userResponse.data?.data ||
+        userResponse.data?.user ||
+        userResponse.data;
+
+      const currentUserId = currentUser?._id || currentUser?.id;
+
+      if (!currentUserId) {
+        console.log("User ID not found");
+        return;
+      }
+
+      setUserId(String(currentUserId));
+
+      try {
+        const favoriteResponse = await api.get(
+          `/favourites/${currentUserId}`
+        );
+
+        const favorites =
+          favoriteResponse.data?.data ||
+          favoriteResponse.data?.favourites ||
+          favoriteResponse.data ||
+          [];
+
+        if (Array.isArray(favorites)) {
+          const ids = favorites.map((favorite) =>
+            String(
+              favorite.destination_id?._id ||
+                favorite.destination_id
+            )
+          );
+
+          setFavoriteIds(ids);
+        }
+      } catch (favoriteError) {
+        console.log(
+          "Could not load existing favourites:",
+          favoriteError.response?.data ||
+            favoriteError.message
+        );
+      }
     } catch (error) {
-      console.error(error);
+      console.error(
+        "Page loading error:",
+        error.response?.data || error.message
+      );
     } finally {
       setLoading(false);
     }
@@ -38,28 +99,84 @@ function Destinations() {
 
   const filteredDestinations = destinationsData.filter(
     (item) =>
-      item.name.toLowerCase().includes(search.toLowerCase()) &&
-      (selectedCity === "All" || item.region === selectedCity)
+      item.name
+        ?.toLowerCase()
+        .includes(search.toLowerCase()) &&
+      (selectedCity === "All" ||
+        item.region === selectedCity)
   );
 
   const handleViewDetails = (id) => {
     navigate(`/destination/${id}`);
   };
 
-  const toggleFavorite = (id) => {
-    setDestinationsData((prev) =>
-      prev.map((place) =>
-        place._id === id
-          ? { ...place, favorite: !place.favorite }
-          : place
-      )
+const toggleFavorite = async (destinationId) => {
+  const id = String(destinationId || "");
+
+  if (!id) {
+    alert("Destination ID not found");
+    return;
+  }
+
+  if (!userId) {
+    alert("Please login first");
+    return;
+  }
+
+  if (favoriteLoadingId === id) return;
+
+  const isFavorite = favoriteIds.includes(id);
+
+  setFavoriteLoadingId(id);
+
+  try {
+    const formData = new FormData();
+
+    formData.append("destination_id", id);
+    formData.append("user_id", userId);
+
+    const response = await api.post(
+      `/favourites/${id}`,
+      formData
     );
-  };
+
+    console.log("Favourite response:", response.data);
+
+    setFavoriteIds((previous) =>
+      isFavorite
+        ? previous.filter(
+            (favoriteId) => favoriteId !== id
+          )
+        : [...new Set([...previous, id])]
+    );
+  } catch (error) {
+    console.error(
+      "Favourite error:",
+      error.response?.data || error.message
+    );
+
+    alert(
+      error.response?.data?.message ||
+        "Favourite update failed"
+    );
+  } finally {
+    setFavoriteLoadingId("");
+  }
+};
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg text-gray-500">
+          Loading destinations...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <section className="bg-color-background py-6 px-6 min-h-screen">
       <div className="max-w-7xl mx-auto px-4">
-
         <h1 className="flex items-center gap-3 text-4xl font-bold">
           Explore Destinations
         </h1>
@@ -69,7 +186,6 @@ function Destinations() {
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-9">
-
           <div className="relative lg:col-span-8">
             <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
 
@@ -85,7 +201,9 @@ function Destinations() {
           <div className="lg:col-span-2">
             <select
               value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
+              onChange={(e) =>
+                setSelectedCity(e.target.value)
+              }
               className="w-full border rounded-xl py-1 px-4 border-gray-200 shadow bg-white cursor-pointer "
             >
               {cities.map((city) => (
@@ -99,26 +217,22 @@ function Destinations() {
           <div className="lg:col-span-2">
             <select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
+              onChange={(e) =>
+                setSelectedCategory(e.target.value)
+              }
               className="w-full border rounded-xl py-1 px-4 border-gray-200 shadow bg-white cursor-pointer"
-            ><option>Category Coming Soon</option>
-{/*               
--------------------------------------cat required here
-               */}
+            >
+              <option>Category Coming Soon</option>
             </select>
           </div>
-
         </div>
 
         <div className="flex gap-3 overflow-x-auto py-8">
-
           {cities.map((city) => (
             <button
               key={city}
               onClick={() => setSelectedCity(city)}
-              className={`px-4 py-1 rounded-xl whitespace-nowrap border-gray-200 shadow transition
-
-              ${
+              className={`px-4 py-1 rounded-xl whitespace-nowrap border-gray-200 shadow transition ${
                 selectedCity === city
                   ? "bg-teal-700 text-white"
                   : "bg-white border hover:bg-gray-100"
@@ -127,101 +241,86 @@ function Destinations() {
               {city}
             </button>
           ))}
-
         </div>
 
-        {/* Cards */}
         {filteredDestinations.length > 0 ? (
-
           <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-3 gap-3">
+            {filteredDestinations.map((place) => {
+              const isFavorite = favoriteIds.includes(
+                String(place._id)
+              );
 
-            {filteredDestinations.map((place) => (
+              const isFavoriteLoading =
+                favoriteLoadingId === String(place._id);
 
-              <div
-                key={place._id}
-                className="bg-white rounded-2xl shadow-sm overflow-hidden border-gray-200 shadow"
-              >
-                <div className="relative">
-                  <img
-                    src={
-                      place.image
-                        ? `http://localhost:9005/${place.image}`
-                        : "https://via.placeholder.com/400x300?text=No+Image"
-                    }
-                    alt={place.name}
-                    className="w-full h-64 object-cover transition-transform duration-700 hover:scale-110"
-                  />
+              return (
+                <div
+                  key={place._id}
+                  className="bg-white rounded-2xl shadow-sm overflow-hidden border-gray-200 shadow"
+                >
+                  <div className="relative">
+                    <img
+                      src={
+                        place.image
+                          ? `http://localhost:9005/${place.image}`
+                          : "https://via.placeholder.com/400x300?text=No+Image"
+                      }
+                      alt={place.name}
+                      className="w-full h-64 object-cover transition-transform duration-700 hover:scale-110"
+                    />
 
-                  <span className="absolute top-4 left-4 bg-teal-700 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    {/* {place.category} */}
-                    Tourist Destination
-                  </span>
+                    <span className="absolute top-4 left-4 bg-teal-700 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      Tourist Destination
+                    </span>
 
-                  <button
-                    onClick={() => toggleFavorite(place._id)}
-                    className={`absolute top-4 right-4 w-12 h-12 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-300
-                      ${
-                        place.favorite
+                    <button
+                      type="button"
+                      onClick={() => toggleFavorite(place._id)}
+                      disabled={favoriteLoadingId === String(place._id)}
+                      className={`absolute top-4 right-4 w-12 h-12 rounded-full shadow-lg flex items-center justify-center cursor-pointer ${
+                        favoriteIds.includes(String(place._id))
                           ? "bg-red-500"
                           : "bg-white"
-                      }
-                    `}
-                  >
-                    {place.favorite ? (
-                      <FaHeart className="text-white text-xl" />
-                    ) : (
-                      <FaRegHeart className="text-gray-700 text-xl" />
-                    )}
-                  </button>
-
-                </div>
-
-                <div className="p-5">
-
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    {place.name}
-                  </h2>
-
-                  <div className="flex items-center gap-2 text-gray-500 mt-2">
-                    <FaMapMarkerAlt className="text-teal-700" />
-                    <span>{place.region}</span>
+                      }`}
+                    >
+                      {favoriteIds.includes(String(place._id)) ? (
+                        <FaHeart className="text-white text-xl" />
+                      ) : (
+                        <FaRegHeart className="text-gray-700 text-xl" />
+                      )}
+                    </button>
                   </div>
 
-                  <p className="text-gray-600 mt-4 leading-relaxed">
-                    {place.description}
-                  </p>
+                  <div className="p-5">
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      {place.name}
+                    </h2>
 
-                  {/* <div className="flex items-center justify-between mt-5">
-
-                    <div className="flex items-center gap-2">
-                      <FaStar className="text-yellow-400" />
-                      <span className="font-semibold">
-                        {place.rating}
-                      </span>
+                    <div className="flex items-center gap-2 text-gray-500 mt-2">
+                      <FaMapMarkerAlt className="text-teal-700" />
+                      <span>{place.region}</span>
                     </div>
 
-                  </div> */}
+                    <p className="text-gray-600 mt-4 leading-relaxed">
+                      {place.description}
+                    </p>
 
-                  <button
-                    onClick={() => handleViewDetails(place._id)}
-                    className="w-full mt-6 border border-gray-300 rounded-xl py-3 flex items-center justify-center gap-2 hover:bg-teal-700 hover:text-white transition"
-                  >
-                    View Details
-                    <FaArrowRight />
-                  </button>
-
+                    <button
+                      onClick={() =>
+                        handleViewDetails(place._id)
+                      }
+                      className="w-full mt-6 border border-gray-300 rounded-xl py-3 flex items-center justify-center gap-2 hover:bg-teal-700 hover:text-white transition"
+                    >
+                      View Details
+                      <FaArrowRight />
+                    </button>
+                  </div>
                 </div>
-
-              </div>
-
-            ))}
-
+              );
+            })}
           </div>
-
         ) : (
-
           <div className="flex flex-col items-center justify-center py-24">
-
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-16 h-16 text-gray-400"
@@ -244,15 +343,10 @@ function Destinations() {
             <p className="text-gray-500 mt-2">
               Try adjusting your filters
             </p>
-
           </div>
-
         )}
-
       </div>
-
     </section>
-
   );
 }
 

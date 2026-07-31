@@ -47,7 +47,7 @@ const AddReview = ({ user, activeTab, setActiveTab, favoriteCount = 0 }) => {
       <div className="flex items-center gap-8 px-8 pt-6 border-b overflow-x-auto">
         <button
           onClick={() => setActiveTab("favorites")}
-          className={`flex items-center gap-2 pb-4 whitespace-nowrap transition ${
+          className={`flex items-center gap-2 pb-4 whitespace-nowrap transition cursor-pointer ${
             activeTab === "favorites"
               ? "text-teal-700 border-b-2 border-teal-700"
               : "text-gray-500 hover:text-teal-700"
@@ -62,7 +62,7 @@ const AddReview = ({ user, activeTab, setActiveTab, favoriteCount = 0 }) => {
 
         <button
           onClick={() => setActiveTab("addReview")}
-          className={`flex items-center gap-2 pb-4 whitespace-nowrap transition ${
+          className={`flex items-center gap-2 pb-4 whitespace-nowrap transition cursor-pointer ${
             activeTab === "addReview"
               ? "text-teal-700 border-b-2 border-teal-700"
               : "text-gray-500 hover:text-teal-700"
@@ -74,7 +74,7 @@ const AddReview = ({ user, activeTab, setActiveTab, favoriteCount = 0 }) => {
 
         <button
           onClick={() => setActiveTab("account")}
-          className={`flex items-center gap-2 pb-4 whitespace-nowrap transition ${
+          className={`flex items-center gap-2 pb-4 whitespace-nowrap transition cursor-pointer ${
             activeTab === "account"
               ? "text-teal-700 border-b-2 border-teal-700"
               : "text-gray-500 hover:text-teal-700"
