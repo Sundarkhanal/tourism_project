@@ -31,7 +31,7 @@ class ReviewService{
     getPublicReviewData = (reviewObj) => {
         const {user_id, location, rating, review_text, _id, createdAt, updatedAt, __v} = reviewObj
         return{
-            location, rating, review_text
+            name: user_id.name, location, rating, review_text
         }
     }
 }
