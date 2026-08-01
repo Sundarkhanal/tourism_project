@@ -1,0 +1,23 @@
+BatoSanjaal Portal Core Knowledge Base
+
+1. BatoSanjaal Platform Overview & Home Section
+Welcome to BatoSanjaal, the ultimate digital bridge for travelers navigating Nepal's rich cultural and natural landscapes. Our platform offers a distinct "Locate Me" radius mapping feature that tracks your real-time geolocation coordinates and instantly fetches points of interest, cultural sites, and regional amenities within a strict 5km radius using Galli Maps. If you are exploring an isolated trail where no matching assets are found, the system gracefully triggers a fallback alert stating "No assets found within 5km."
+2. BatoSanjaal Featured Travel & Hotel Packages
+BatoSanjaal partners with local vendors to display premium, fixed-grid featured packages on the homepage:
+- Pokhara Lakeside Retreat: Includes a 3-night stay at a 3-star lakeside hotel, a guided boating session to Tal Barahi Temple, and a sunrise trip to Sarangkot. Price is inclusive of breakfast.
+- Chitwan Wildlife Safari: A 2-day package featuring an all-inclusive jungle resort stay, a guided jeep safari to spot the one-horned rhinoceros, and a traditional Tharu cultural dance evening show.
+- Kathmandu Heritage Walk: A 1-day guided excursion covering Kathmandu Durbar Square, Swayambhunath Stupa, and the historic alleys of Patan. Includes entry fees and a traditional Newari lunch.
+
+3. Localized Travel News & Safety Updates
+- News Entry 1 (Safety Alert): The Department of Hydrology and Meteorology has issued a heavy rainfall warning for the Koshi and Bagmati provinces. Travelers trekking near the Langtang region are strongly advised to halt trekking activities for the next 24 hours due to temporary trail blocks and potential landslide risks. Local authorities are monitoring the routes.
+- News Entry 2 (Cultural Festival): The vibrant Rato Machindranath Jatra festival has officially commenced in Patan, Lalitpur. Expect significant traffic diversions around the Pulchowk and Jawalakhel areas over the weekend. Travelers are highly encouraged to visit the festival routes to experience the historic Newari chariot procession.
+- News Entry 3 (Infrastructure Update): The local municipality has completed a major road upgrade along the primary highway leading to Sauraha, Chitwan. The travel time from Kathmandu to Chitwan has now dropped significantly, making road travel smoother and safer for tourist buses.
+- News Entry 4 (Environment): Annapurna Conservation Area Project (ACAP) announces new plastic-free regulations across primary trekking routes. Travelers must register reusable water bottles at entry checkpoints.
+
+4. Emergency Support & Vital Contact Hotlines
+For immediate safety assistance or crisis management while traveling across Nepal, tourists can access these hotlines directly via the static emergency footer on our application:
+- Tourist Police Hotline: 1144 (Dedicated support for international and domestic tourists, available 24/7)
+- General Nepal Police: 100
+- Armed Police Force (APF) Crisis Management: 1114
+- Nepal Red Cross Society Ambulance Service: 102
+- Tourist Information Center (Kathmandu): +977-1-4256909
