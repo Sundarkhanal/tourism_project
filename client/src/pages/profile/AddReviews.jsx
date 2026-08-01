@@ -1,18 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import { FaStar, FaRegStar, FaMapMarkerAlt, FaHeart, FaUser, FaPen } from "react-icons/fa";
 
 const AddReview = ({ user, activeTab, setActiveTab, favoriteCount = 0 }) => {
-  const [staticReviews] = useState([
-    {
-      id: 1,
-      user: "Pari",
-      location: "Pokhara",
-      rating: 5,
-      review: "Amazing place! The views of the mountains were breathtaking. Highly recommended for nature lovers.",
-      date: "2026-06-15"
-    },
-  ]);
   const [location, setLocation] = useState("");
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
@@ -21,21 +11,25 @@ const AddReview = ({ user, activeTab, setActiveTab, favoriteCount = 0 }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!rating) {
+      alert("Please select a rating");
+      return;
+    }
+
     try {
-      await axios.post("http://localhost:5000/api/reviews", {
-        name: user.name,
+      await api.post("/review/create-review", {
         location,
-        review,
-        rating,
+        rating: String(rating),
+        review_text: review,
       });
 
       alert("Review submitted successfully!");
-
       setLocation("");
       setReview("");
       setRating(0);
-    } catch (err) {
-      console.error(err);
+      setHoverRating(0);
+    } catch (error) {
+      console.error(error);
       alert("Failed to submit review");
     }
   };

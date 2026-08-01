@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import {
   FaQuoteLeft,
   FaStar,
   FaRegStar,
   FaArrowLeft,
-  FaArrowRight,
+  FaArrowRight, 
 } from "react-icons/fa";
 
 const ReviewsStories = () => {
@@ -18,25 +18,38 @@ const ReviewsStories = () => {
 
   const fetchReviews = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/reviews");
-      setReviews(res.data);
+      const res = await api.get("/review/all-reviews");
+
+      const reviewData =
+        res.data?.data?.reviews ||
+        res.data?.reviews ||
+        res.data?.data ||
+        res.data;
+        
+      setCurrent(0);
+      setReviews(Array.isArray(reviewData) ? reviewData : []);
     } catch (error) {
-      console.error("Error fetching reviews:", error);
+      console.error(
+        "Error fetching reviews:",
+        error.response?.data || error.message
+      );
+
+      setReviews([]);
     }
   };
 
   const totalSlides = Math.max(1, Math.ceil(reviews.length / 2));
 
   const nextSlide = () => {
-    setCurrent((prev) =>
-      prev === totalSlides - 1 ? 0 : prev + 1
-    );
+    if (current < totalSlides - 1) {
+      setCurrent(current + 1);
+    }
   };
 
   const prevSlide = () => {
-    setCurrent((prev) =>
-      prev === 0 ? totalSlides - 1 : prev - 1
-    );
+    if (current > 0) {
+      setCurrent(current - 1);
+    }
   };
 
   return (
@@ -79,47 +92,54 @@ const ReviewsStories = () => {
                 {Array.from({ length: totalSlides }).map((_, slideIndex) => (
                   <div
                     key={slideIndex}
-                    className="min-w-full grid grid-cols-1 md:grid-cols-2 gap-6 px-14"
+                    className="min-w-full grid grid-cols-1 md:grid-cols-2 gap-4 px-10 md:px-14"
                   >
-                    {reviews
-                      .slice(slideIndex * 2, slideIndex * 2 + 2)
-                      .map((item) => (
-                        <div
-                          key={item._id}
-                          className="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full"
-                        >
-                          <FaQuoteLeft className="text-3xl text-gray-200 mb-4" />
+                    {reviews.slice(slideIndex * 2, slideIndex * 2 + 2).map((item) => (
+                      <div
+                        key={item._id || item.id}
+                        className="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full"
+                      >
+                        <FaQuoteLeft className="text-3xl text-gray-200 mb-4" />
 
-                          <p className="text-gray-700 leading-relaxed flex-1 text-sm">
-                            "{item.review}"
-                          </p>
+                        <p className="text-gray-700 leading-relaxed flex-1 text-sm">
+                          "{item.review_text}"
+                        </p>
 
-                          <div className="mt-5 pt-4 border-t border-gray-100 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-semibold text-base">
-                                {item.name?.charAt(0)}
-                              </div>
-                              <div>
-                                <h4 className="font-semibold text-gray-900 text-base">
-                                  {item.name}
-                                </h4>
-                                <p className="text-gray-500 text-xs">
-                                  {item.location}
-                                </p>
-                              </div>
+                        <div className="mt-5 pt-4 border-t border-gray-100 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-semibold text-base">
+                              {(item.user?.name || item.name || "T").charAt(0)}
                             </div>
-                            <div className="flex gap-0.5">
-                              {[1, 2, 3, 4, 5].map((star) =>
-                                star <= item.rating ? (
-                                  <FaStar key={star} className="text-yellow-400 text-sm" />
-                                ) : (
-                                  <FaRegStar key={star} className="text-gray-300 text-sm" />
-                                )
-                              )}
+
+                            <div>
+                              <h4 className="font-semibold text-gray-900 text-base">
+                                {item.user?.name || item.name || "Traveler"}
+                              </h4>
+
+                              <p className="text-gray-500 text-xs">
+                                {item.location}
+                              </p>
                             </div>
                           </div>
+
+                          <div className="flex gap-0.5">
+                            {[1, 2, 3, 4, 5].map((star) =>
+                              star <= Number(item.rating) ? (
+                                <FaStar
+                                  key={star}
+                                  className="text-yellow-400 text-sm"
+                                />
+                              ) : (
+                                <FaRegStar
+                                  key={star}
+                                  className="text-gray-300 text-sm"
+                                />
+                              )
+                            )}
+                          </div>
                         </div>
-                      ))}
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
