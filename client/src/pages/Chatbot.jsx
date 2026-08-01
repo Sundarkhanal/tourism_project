@@ -64,6 +64,13 @@ function Chatbot() {
     }
   };
 
+  const readAloud = (text) => {
+    window.speechSynthesis.cancel();
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "en-US";
+    window.speechSynthesis.speak(speech);
+  };
+
   return (
     <div className="min-h-screen bg-[#fafafa] px-4 py-10">
       <div className="mx-auto flex min-h-[80vh] max-w-4xl flex-col">
@@ -97,7 +104,7 @@ function Chatbot() {
 
                   {chatMessage.sender === "bot" && (
                     <button type="button" 
-                    // onClick={() => readAloud(chatMessage.text)}
+                      onClick={() => readAloud(chatMessage.text)}
                       className="mt-1 flex items-center gap-2 rounded-full px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
                     >
                       <FaVolumeHigh />
