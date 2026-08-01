@@ -1,35 +1,67 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   FaArrowUp,
   FaMicrophone,
   FaVolumeHigh,
 } from "react-icons/fa6";
+import chatbotService from "../services/chatbot.service";
 
 function Chatbot() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
+    const trimmedMessage = message.trim();
 
-    if (!message.trim()) return;
+    if (!trimmedMessage || loading) return;
+    const userMessage ={
+      id: `${Date.now()}-user`,
+      sender: "user",
+      text:trimmedMessage,
+    }
 
-    setMessages([
-      ...messages,
-      {
-        id: Date.now(),
-        text: message.trim(),
-      },
+    setMessages((previousMessages)=>[
+      ...previousMessages,
+      userMessage,
     ]);
 
     setMessage("");
-  };
+    setLoading(true);
 
-  const readAloud = (text) => {
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(
-      new SpeechSynthesisUtterance(text)
-    );
+    try{
+      const response = await chatbotService.post("/api/chatbot/message",
+        {
+          message:trimmedMessage,
+        }
+      );
+
+      const botMessage = {
+        id: `${Date.now()}-bot`,
+        sender: "bot",
+        text: response.data.response,
+      }
+      setMessages((previousMessages) => [
+        ...previousMessages,
+        botMessage,
+      ]);
+    }catch(error){
+      console.error("Chatbot error:", error);
+      const errorMessage = {
+        id: `${Date.now()}-error`,
+        sender: "bot",
+        text: "Sorry, Bato AI is unavailable right now. Please try again.",
+      };
+
+      setMessages((previousMessages) => [
+        ...previousMessages,
+        errorMessage,
+      ]);
+
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -53,22 +85,35 @@ function Chatbot() {
               {messages.map((chatMessage) => (
                 <div
                   key={chatMessage.id}
-                  className="ml-auto max-w-[80%]"
+                  className={`max-w-[80%] ${chatMessage.sender === "user" ? "ml-auto" : "mr-auto"
+                  }`}
                 >
-                  <div className="rounded-3xl bg-gray-200 px-5 py-3">
+                  <div className={`rounded-3xl px-5 py-3 ${
+                    chatMessage.sender === "user" ? "bg-gray-900 text-white" : "bg-gray-200 text-gray-900"
+                    }`}
+                  >
                     {chatMessage.text}
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => readAloud(chatMessage.text)}
-                    className="ml-auto mt-1 flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
-                    aria-label="Read aloud"
-                  >
-                    <FaVolumeHigh />
-                  </button>
+                  {chatMessage.sender === "bot" && (
+                    <button type="button" 
+                    // onClick={() => readAloud(chatMessage.text)}
+                      className="mt-1 flex items-center gap-2 rounded-full px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
+                    >
+                      <FaVolumeHigh />
+                      Read Aloud
+                    </button>
+                  )}
+
                 </div>
               ))}
+              {loading && (
+              <div className="mr-auto max-w-[80%]">
+                <div className="rounded-3xl bg-gray-200 px-5 py-3 text-gray-500">
+                  Thinking...
+                </div>
+              </div>
+            )}
             </div>
           )}
         </div>
@@ -94,7 +139,7 @@ function Chatbot() {
 
           <button
             type="submit"
-            disabled={!message.trim()}
+            disabled={!message.trim() || loading}
             className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-white disabled:bg-gray-300"
           >
             <FaArrowUp />

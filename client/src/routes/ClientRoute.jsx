@@ -25,10 +25,10 @@ export default function ClientRoutes() {
                 <Route path="/blogs" element={<Blogs />} />
                 <Route path="/destinations" element={<Destinations />} />
                 <Route path="/destination/:id" element={<DestinationDetails />} />
+                <Route path="/chatbot" element={<Chatbot />} />
 
                 <Route element={<ProtectedRoute />}>
                     <Route path="/profile" element={<Profile />} />
-                    <Route path="/chatbot" element={<Chatbot />} />
                 </Route>
             </Route>
 

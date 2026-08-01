@@ -94,9 +94,9 @@ const ReviewsStories = () => {
                     key={slideIndex}
                     className="min-w-full grid grid-cols-1 md:grid-cols-2 gap-4 px-10 md:px-14"
                   >
-                    {reviews.slice(slideIndex * 2, slideIndex * 2 + 2).map((item) => (
+                    {reviews.slice(slideIndex * 2, slideIndex * 2 + 2).map((item, reviewIndex) => (
                       <div
-                        key={item._id || item.id}
+                        key={item._id || item.id || `${slideIndex}-${reviewIndex}`}
                         className="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full"
                       >
                         <FaQuoteLeft className="text-3xl text-gray-200 mb-4" />
