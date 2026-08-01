@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   FaArrowUp,
   FaMicrophone,
@@ -10,6 +10,78 @@ function Chatbot() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const [recording, setRecording] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+
+      const mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.start();
+      setRecording(true);
+    } catch (error) {
+      console.error("Microphone error:", error);
+    }
+  };
+
+  const stopRecording = () => {
+    const mediaRecorder = mediaRecorderRef.current;
+
+    if (!mediaRecorder || mediaRecorder.state === "inactive") return;
+
+    mediaRecorder.onstop = async () => {
+      const audioBlob = new Blob(audioChunksRef.current, {
+        type: mediaRecorder.mimeType || "audio/webm",
+      });
+
+      mediaRecorder.stream
+        .getTracks()
+        .forEach((track) => track.stop());
+
+      if (audioBlob.size === 0) return;
+
+      const formData = new FormData();
+      formData.append("file", audioBlob, "recording.webm");
+
+      setTranscribing(true);
+
+      try {
+        const response = await chatbotService.post(
+          "/api/transcribe",
+          formData
+        );
+
+        if (response.data?.text) {
+          setMessage(response.data.text);
+        }
+      } catch (error) {
+        console.error("Transcription error:", error);
+        alert("Failed to transcribe audio. Please try again.");
+      } finally {
+        setTranscribing(false);
+      }
+    };
+
+    mediaRecorder.stop();
+    setRecording(false);
+  };
 
   const handleSubmit = async(event) => {
     event.preventDefault();
@@ -65,10 +137,15 @@ function Chatbot() {
   };
 
   const readAloud = (text) => {
-    window.speechSynthesis.cancel();
+    if (speaking) {
+      window.speechSynthesis.cancel();
+      setSpeaking(false);
+      return;
+    }
     const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = "en-US";
+    speech.onend = () => setSpeaking(false);
     window.speechSynthesis.speak(speech);
+    setSpeaking(true);
   };
 
   return (
@@ -108,7 +185,7 @@ function Chatbot() {
                       className="mt-1 flex items-center gap-2 rounded-full px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
                     >
                       <FaVolumeHigh />
-                      Read Aloud
+                      {speaking ? "Stop" : "Read Aloud"}
                     </button>
                   )}
 
@@ -133,20 +210,29 @@ function Chatbot() {
             type="text"
             value={message}
             onChange={(event) => setMessage(event.target.value)}
-            placeholder="Ask Bato AI anything"
+            placeholder={transcribing ? "Transcribing voice..." : recording ? 
+              "Listening... Click again to stop" : "Ask Bato AI anything"}
+            disabled={recording || transcribing}
             className="min-w-0 flex-1 bg-transparent outline-none"
           />
 
           <button
             type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100"
-          >
+            onClick={recording ? stopRecording : startRecording}
+            disabled={transcribing || loading}
+              className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                recording
+                  ? "bg-red-500 text-white"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+              aria-label={recording ? "Stop recording" : "Start recording"}  
+            >
             <FaMicrophone />
           </button>
 
           <button
             type="submit"
-            disabled={!message.trim() || loading}
+            disabled={!message.trim() || loading || recording || transcribing }
             className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-white disabled:bg-gray-300"
           >
             <FaArrowUp />
