@@ -1,17 +1,64 @@
 import React from "react";
 import { FaClock, FaInfoCircle } from "react-icons/fa";
+import pic1 from "../../assets/pic1.jpeg";
+
 
 const packages = [
   {
     id: 1,
-    title: "Lumbini Spiritual Retreat",
-    company: "Peace Trail Nepal",
+    title: "Himalayan Trekking Bundle",
+    company: "ABC Trail Nepal",
     description:
-      "A peaceful 2-day spiritual journey to the birthplace of Lord Buddha with meditation sessions.",
-    duration: "2 Days / 1 Night",
-    price: "NPR 12,000",
+      "A full package of backpack, trekking pole, water bottle, jacket, thermals, uv protection glasses, etc.",
+    price: "NPR 25,000",
+    image:pic1,
+  },
+  {
+    id: 2,
+    title: "Chitwan Jungle Safari Escapade",
+    company: "Wild Sauraha Adventures",
+    description:
+      "2 Nights / 3 Days package including 4WD jeep safari, dugout canoe ride along Rapti river, Tharu cultural dance, resort stay, and all meals.",
+    price: "NPR 15,000",
+    image:"https://www.chitwanjungleguides.com/wp-content/uploads/2019/01/chitwan-jungle-jeep-safariwww.chitwanjungleguides.com_.png",
+  },
+  {
+    id: 3,
+    title: "Powerful Pokhara Combo",
+    company: "Lakeside Gateway Tours",
+    description:
+      "Includes tandem paragliding from Sarangkot, boating at Phewa Lake, visits to Bat Cave (Chameri Gufa), Davis Falls, Pame hangout, plus 2 nights hotel accommodation.",
+    price: "NPR 18,500",
+    image:"https://lp-cms-production.imgix.net/2019-06/53693064.jpg?fit=crop&q=40&sharp=10&vib=20&auto=format&ixlib=react-8.6.4",
+  },
+  {
+    id: 4,
+    title: "Everest Base Camp Express Trek",
+    company: "Khumbu Trail Expeditions",
+    description:
+      "12-day fully guided trek to EBC and Kala Patthar. Includes round-trip Kathmandu-Lukla flights, teahouse accommodation, mountain permits, guide, and porter services.",
+    price: "NPR 150,000",
+    image:"https://nypost.com/wp-content/uploads/sites/2/2020/04/everest-base-camp.jpg?quality=90&strip=all",
+  },
+  {
+    id: 5,
+    title: "Upper Mustang Overland Tour",
+    company: "Kingdom Overland Nepal",
+    description:
+      "5 Nights / 6 Days 4WD Scorpio overland journey from Pokhara to Muktinath temple, Marpha, and ancient sky caves.",
+    price: "NPR 19,000",
     image:
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800",
+      "https://insidehimalayas.com/wp-content/uploads/2019/07/Range-Above-Panda-Khola-Lubra-Mustang-Nepal.jpg",
+  },
+  {
+    id: 6,
+    title: "Kathmandu Valley All-UNESCO Heritage Pass",
+    company: "Yeti Heritage Trails",
+    description:
+      "2-day guided cultural city tour covering all 7 UNESCO sites: Swayambhunath, Boudhanath, Pashupatinath, Changu Narayan, and the Durbar Squares of Kathmandu, Patan, & Bhaktapur.",
+    price: "NPR 8,500",
+    image:
+      "https://visitsnepal.com/wp-content/uploads/2020/09/kathmandu-things-to-do-1024x661.jpg",
   },
 ];
 
@@ -70,17 +117,13 @@ const FeaturedPackages = () => {
                 </p>
 
                 {/* Bottom */}
-                <div className="flex items-center justify-between mt-6">
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <FaClock />
-                    <span>{item.duration}</span>
-                  </div>
-
+                {/* <div className="flex items-center justify-between mt-6">
                   <button className="flex items-center gap-2 border border-gray-300 px-4 py-2 rounded-full hover:bg-teal-600 hover:text-white transition">
                     <FaInfoCircle />
                     Details
                   </button>
-                </div>
+                </div> */}
+
               </div>
             </div>
           ))}
