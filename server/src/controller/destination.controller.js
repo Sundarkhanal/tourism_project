@@ -38,7 +38,8 @@ class DestinationController {
 
     listAllDestinations = async (req, res, next) => {
         try {
-            const destinations = await destinationService.listAllDestinations();
+            const {search, category} = req.query
+            const destinations = await destinationService.listAllDestinations(search, category);
 
             res.json({
                 data: destinations.map(destination =>
