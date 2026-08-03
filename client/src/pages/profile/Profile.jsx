@@ -98,6 +98,7 @@ const Profile = () => {
   const logout = async () => {
     try {
       await api.post("/auth/logout");
+      localStorage.removeItem("favorites");
     } catch (error) {
       console.error(
         "Logout error:",

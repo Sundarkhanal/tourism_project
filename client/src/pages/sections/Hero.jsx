@@ -6,11 +6,11 @@ import { Link } from "react-router-dom";
 
 function Hero({ onDiscover }) {
   return (
-    <section className="relative min-h-screen bg-cover bg-center" 
+    <section className="relative min-h-screen bg-cover bg-no-repeat bg-[position:65%_center] md:bg-center" 
       style={{ backgroundImage: `url(${hero})` }}
     >
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center">
-        <div className="max-w-4xl">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center md:items-start">
+        <div className="max-w-4xl md:pt-20 lg:pt-24">
 
           {/* Main Heading */}
           <h1 className="text-white font-bold leading-tight text-3xl md:text-6xl">
@@ -70,7 +70,7 @@ function Hero({ onDiscover }) {
       </div>
 
       {/* Bottom Fade Effect */}
-      <div className="absolute bottom-0 left-0 w-full h-50 bg-gradient-to-t from-white via-white/60 to-transparent pointer-events-none z-20"></div>
+      <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-white via-white/35 to-transparent pointer-events-none z-20"></div>
     </section>
   );
 }

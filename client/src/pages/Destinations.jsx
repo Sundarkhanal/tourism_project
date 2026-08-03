@@ -14,8 +14,6 @@ function Destinations() {
 
   const [search, setSearch] = useState("");
   const [selectedCity, setSelectedCity] = useState("All");
-  const [selectedCategory, setSelectedCategory] =
-    useState("All Categories");
 
   const [destinationsData, setDestinationsData] = useState([]);
   const [favoriteIds, setFavoriteIds] = useState(() => {
@@ -32,7 +30,6 @@ function Destinations() {
     }
   });
   const [userId, setUserId] = useState("");
-
   const [loading, setLoading] = useState(true);
   const [favoriteLoadingId, setFavoriteLoadingId] = useState("");
 
@@ -48,15 +45,12 @@ function Destinations() {
   const loadPage = async () => {
     try {
       setLoading(true);
-
       const destinationResponse = await api.get(
         "/destination/all-destinations"
       );
-
       setDestinationsData(destinationResponse.data?.data || []);
 
       const userResponse = await api.get("/auth/me");
-
       const currentUser =
         userResponse.data?.data ||
         userResponse.data?.user ||
@@ -95,6 +89,11 @@ function Destinations() {
   };
 
 const toggleFavorite = async (place) => {
+  if (!userId) {
+    alert("Please log in to save favorites!");
+    navigate("/login");
+    return;
+  }
   const id = String(place._id);
 
   if (favoriteLoadingId === id) return;
@@ -131,6 +130,13 @@ const toggleFavorite = async (place) => {
       "Favourite API error:",
       error.response?.data || error.message
     );
+    localStorage.setItem(
+      "favorites",
+      JSON.stringify(savedFavorites)
+    );
+    setFavoriteIds(
+      savedFavorites.map((item) => String(item._id))
+    );
   } finally {
     setFavoriteLoadingId("");
   }
@@ -154,7 +160,7 @@ const toggleFavorite = async (place) => {
         </h1>
 
         <p className="text-gray-600 mt-2">
-          Discover the beauty of Nepal by city and category
+          Discover the beauty of Nepal by city
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-9">
@@ -183,18 +189,6 @@ const toggleFavorite = async (place) => {
                   {city}
                 </option>
               ))}
-            </select>
-          </div>
-
-          <div className="lg:col-span-2">
-            <select
-              value={selectedCategory}
-              onChange={(e) =>
-                setSelectedCategory(e.target.value)
-              }
-              className="w-full border rounded-xl py-1 px-4 border-gray-200 shadow bg-white cursor-pointer"
-            >
-              <option>Category Coming Soon</option>
             </select>
           </div>
         </div>
