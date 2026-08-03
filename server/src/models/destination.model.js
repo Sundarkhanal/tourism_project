@@ -10,6 +10,18 @@ const destinationSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  category: {
+    type: String,
+    required: true,
+    enum: [
+      "Mountain",
+      "Lake",
+      "Temple",
+      "Heritage",
+      "Adventure",
+      "National Park"
+    ]
+  },
   location: {
     type: {
       type: String, 
