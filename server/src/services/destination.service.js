@@ -27,6 +27,7 @@ class DestinationService {
             _id,
             name,
             region,
+            category,
             location,
             description,
             image,
@@ -37,6 +38,7 @@ class DestinationService {
             _id,
             name,
             region,
+            category,
             location,
             description,
             image,
@@ -44,10 +46,20 @@ class DestinationService {
         };
     };
 
-    listAllDestinations = async () => {
+    listAllDestinations = async (search, category) => {
         try {
+            const filter = {}
+            if (search) {
+                filter.name = {
+                    $regex: "^"+search,
+                    $options: "i"
+                }
+            }
 
-            const data = await DestinationModel.find().sort({
+            if (category) {
+                filter.category = category
+            }
+            const data = await DestinationModel.find(filter).sort({
                 createdAt: "desc"
             });
 
