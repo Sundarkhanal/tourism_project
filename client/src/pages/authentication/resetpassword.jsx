@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { FaArrowLeft, FaLock } from "react-icons/fa";
 import api from "../../api/axios";
+import { toast } from "sonner";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      toast.error("Passwords do not match.");
       return;
     }
 
@@ -37,10 +38,10 @@ const ResetPassword = () => {
         newpassword: password,
       });
 
-      alert("Password reset successfully.");
+      toast.success("Password reset successfully.");
       navigate("/login");
     } catch (err) {
-      alert(err.response?.data?.message || "Something went wrong.");
+      toast.error(err.response?.data?.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }

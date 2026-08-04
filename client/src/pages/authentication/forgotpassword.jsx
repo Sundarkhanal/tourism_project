@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { MdEmail } from "react-icons/md";
 import axios from "axios";
+import { toast } from "sonner";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -18,9 +19,9 @@ const ForgotPassword = () => {
         { email }
       );
 
-      alert("Password reset link sent.");
+      toast.success("Password reset link sent.");
     } catch (err) {
-      alert(err.response?.data?.message || "Something went wrong.");
+      toast.error(err.response?.data?.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }

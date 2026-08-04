@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaEllipsisH, FaTrash, FaEdit } from "react-icons/fa";
-
+import { toast } from "sonner";
 const BlogCard = ({
   blog,
   currentUser,
@@ -73,7 +73,7 @@ const BlogCard = ({
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(window.location.href);
-                    alert("Link copied!");
+                    toast.success("Link copied!");
                     setActiveMenu(null);
                   }}
                   className="w-full text-left px-3 py-2 hover:bg-gray-100"

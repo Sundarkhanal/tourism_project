@@ -8,6 +8,7 @@ import {
   FaMapMarkerAlt,
   FaArrowRight,
 } from "react-icons/fa";
+import { toast } from "sonner";
 
 function Destinations() {
   const navigate = useNavigate();
@@ -111,7 +112,7 @@ function Destinations() {
 
 const toggleFavorite = async (place) => {
   if (!userId) {
-    alert("Please log in to save favorites!");
+    toast.error("Please log in to save favorites!");
     navigate("/login");
     return;
   }
