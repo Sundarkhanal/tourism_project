@@ -5,6 +5,7 @@ import api from "../../api/axios";
 import BlogCard from "./BlogCard";
 import CreateBlog from "./CreateBlog";
 import UpdateBlog from "./UpdateBlog";
+import { toast } from "sonner";
 
 const Blogs = () => {
   const [showCreateBlog, setShowCreateBlog] = useState(false);
@@ -58,9 +59,10 @@ const Blogs = () => {
     try {
       await api.delete(`/blog/delete/${id}`);
       setBlogs((prev) => prev.filter((blog) => blog._id !== id));
-      alert("Story deleted successfully.");
+      toast.success("Story deleted successfully.");
     } catch (error) {
       console.error(error);
+      toast.error(error.response?.data?.message || "Failed to delete story.");
     }
   };
 

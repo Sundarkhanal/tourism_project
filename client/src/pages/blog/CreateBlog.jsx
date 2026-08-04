@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FaTimes, FaCloudUploadAlt } from "react-icons/fa";
+import { toast } from "sonner";
 import api from "../../api/axios";
 
-// 1. Added 'onBlogCreated' to the destructured props below
 const CreateBlog = ({ isOpen, onClose, onBlogCreated }) => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
@@ -14,12 +14,12 @@ const CreateBlog = ({ isOpen, onClose, onBlogCreated }) => {
     e.preventDefault();
 
     if (!description.trim()) {
-      alert("Please write your travel experience.");
+      toast.error("Please write your travel experience.");
       return;
     }
 
     if (!image) {
-      alert("Please upload an image.");
+      toast.error("Please upload an image.");
       return;
     }
 
@@ -35,9 +35,9 @@ const CreateBlog = ({ isOpen, onClose, onBlogCreated }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      alert("Story published successfully!");
+      toast.success("Story published successfully!");
 
-      // 2. Trigger the automatic feed refetch on your main page
+      //Trigger the automatic feed refetch on main page
       if (onBlogCreated) {
         onBlogCreated();
       }
@@ -47,7 +47,7 @@ const CreateBlog = ({ isOpen, onClose, onBlogCreated }) => {
       onClose();
     } catch (error) {
       console.log(error);
-      alert(error.response?.data?.message || "Something went wrong.");
+      toast.error(error.response?.data?.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }
