@@ -6,7 +6,7 @@ class NewsController{
             const data = req.body
             
             if (req.file) {
-                data.image = req.file.filename
+                data.image = req.file.path
             }
             const newsData = await newsService.createNews(data)
 
@@ -73,7 +73,7 @@ class NewsController{
             
             const data = req.body
             if (req.file) {
-                data.image = req.file.filename
+                data.image = req.file.path
             }
 
             const filter = {

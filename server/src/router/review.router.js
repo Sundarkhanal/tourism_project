@@ -6,6 +6,7 @@ const reviewCtrl = require("../controller/review.controller")
 
 reviewRouter.post("/create-review", checkPermission(), validator(ReviewDTO), reviewCtrl.createReview)
 reviewRouter.get("/all-reviews", reviewCtrl.getAllReviews)
+reviewRouter.delete("/:reviewId",checkPermission(),  reviewCtrl.deleteReviewById )
 
 
 
