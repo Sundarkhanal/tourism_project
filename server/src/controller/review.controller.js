@@ -34,6 +34,22 @@ class ReviewController{
             next(exception)
         }
     }
+
+    deleteReviewById = async(req, res, next) => {
+        try {
+            const id = req.params.reviewId
+            const filter = {
+                _id: id
+            }
+            const deletedReviewData = await reviewService.deleteSingleReview(filter)
+            res.json({
+                message:"Review Deleted Successfully!",
+                status:"Ok"
+            })
+        } catch (exception) {
+            next(exception)
+        }
+    }
 }
 
 
