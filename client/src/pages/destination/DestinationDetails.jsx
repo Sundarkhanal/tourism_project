@@ -66,17 +66,19 @@ const DestinationDetails = () => {
   }
 
   const {
-    name,
-    region,
-    description,
-    image,
-    latitude,
-    longitude,
-    category = "Tourist Destination",
-    rating = 0,
-    price = "0",
-    blogPosts = [],
-  } = destination;
+  name,
+  region,
+  description,
+  image,
+  location,
+  category = "Tourist Destination",
+  rating = 4.0,
+  price= "Updating soon",
+} = destination;
+
+const longitude = location?.coordinates?.[0];
+const latitude = location?.coordinates?.[1];
+  
 
   const stars = Math.round(rating || 0);
 
@@ -96,12 +98,9 @@ const DestinationDetails = () => {
 
       {/* HERO */}
       <div className="max-w-6xl mx-auto px-4 mt-4">
-        <div className="relative w-full h-[350px] rounded-2xl overflow-hidden">
+        <div className="relative w-full h-[260px] sm:h-[350px] rounded-2xl overflow-hidden">
           <img
-            src={image
-              ? `http://localhost:9005/${image}`
-              : "https://via.placeholder.com/1200x500?text=No+Image"
-            }
+            src={`${image}`}
             alt={name}
             className="w-full h-full object-cover"
           />
@@ -113,7 +112,7 @@ const DestinationDetails = () => {
               {category}
             </span>
 
-            <h1 className="text-3xl font-bold mt-2">{name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mt-2">{name}</h1>
 
             <div className="flex items-center gap-2 text-sm mt-1">
               <FaMapMarkerAlt />
@@ -140,7 +139,7 @@ const DestinationDetails = () => {
 
             <div className="mt-4 inline-flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-full text-sm text-gray-700">
               <FaStar className="text-teal-600 text-xs" />
-              Entry: {price === "0" ? "Free" : price}
+              Entry Fee: {price}
             </div>
           </div>
 
@@ -148,7 +147,7 @@ const DestinationDetails = () => {
           {/* WHAT YOU CAN DO */}
           <div className="p-2">
             <h2 className="text-lg font-semibold">What You Can Do Here</h2>
-            <div className="flex flex-wrap gap-3 mt-2">
+            <div className="flex flex-wrap gap-3 mt-3">
               {[
                 "Guided Heritage Walk",
                 "Photography",
@@ -191,12 +190,7 @@ const DestinationDetails = () => {
 
             <div className="flex justify-between text-sm mb-2">
               <span>Entry Fee</span>
-              <span>{price === "0" ? "Free" : price}</span>
-            </div>
-
-            <div className="flex justify-between text-sm">
-              <span>Blog Posts</span>
-              <span>{blogPosts.length}</span>
+              <span>{price}</span>
             </div>
           </div>
 
