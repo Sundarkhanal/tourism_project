@@ -1,5 +1,6 @@
 const newsService = require("../services/news.service")
 const CHATBOT_SERVICE_URL = process.env.CHATBOT_SERVICE_URL
+const axios = require("axios")
 
 /**
  * Helper function to send news data to the Python Chatbot for Qdrant Vector indexing.
