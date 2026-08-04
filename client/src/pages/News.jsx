@@ -1,38 +1,31 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaNewspaper,
   FaMapMarkerAlt,
   FaCalendarAlt,
 } from "react-icons/fa";
-
 import api from "../api/axios";
 
 const News = () => {
+  const [news, setNews] = useState([]);
+  useEffect(() => {
+    const getNews = async () => {
+      try {
+        const { data } = await api.get("/news/all-news");
+        const sortedNews = [...data.data].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setNews(sortedNews);
+      } catch (error) {
+        console.error("Failed to fetch news:", error);
+      }
+    };
+    getNews();
+  }, []);
 
-const [news, setNews] = useState([]);
-
-const fetchNews = async () => {
-  try {
-    const response = await api.get("/news/all-news");
-
-    // Sorting the News so that the latest is on the top
-    const sortedNews = response.data.data.sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
-
-    setNews(sortedNews);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-useEffect(() => {
-  fetchNews();
-}, []);
-
-const featuredNews = news[0];
-const normalNews = news.slice(1);
-
+  const [featuredNews, ...normalNews] = news;
+  const formatDate = (date) =>
+    new Date(date).toLocaleDateString();
   return (
     <section className="bg-color-background py-6 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,82 +38,77 @@ const normalNews = news.slice(1);
             Latest updates, and news about Nepal tourism
           </p>
         </div>
-
-        {/* Featured News */}
         {featuredNews && (
           <div className="bg-white rounded-2xl shadow-md overflow-hidden grid lg:grid-cols-2 mb-10">
-            <img
-              src={featuredNews.image}
-              alt={featuredNews.title}
-              className="w-full h-72 object-cover"
-            />
-        
-            <div className="p-6 flex flex-col justify-center">
-              <span className="text-teal-600 font-semibold">
-                Latest News
+            <div className="relative">
+              <img
+                src={featuredNews.image}
+                alt={featuredNews.title}
+                className="w-full h-75 object-cover"
+              />
+              <span className="absolute top-4 right-4 bg-white text-black text-sm font-semibold px-4 py-1 rounded-full">
+                  Latest News
               </span>
-        
-              <h2 className="text-3xl font-bold mt-3">
-                {featuredNews.title}
+            </div>
+
+            <div className="p-4 flex flex-col justify-center">
+              <h2 className="text-teal-700 mb-3">
+                Source: {featuredNews.publisherName}
               </h2>
-        
+              <p className="text-3xl font-bold mb-3">
+                {featuredNews.title}
+              </p>
               <p className="text-gray-600 mt-3">
                 {featuredNews.description}
               </p>
-        
               <div className="flex gap-5 mt-5 text-gray-500">
                 <span className="flex items-center gap-1">
                   <FaMapMarkerAlt />
                   {featuredNews.location}
                 </span>
-        
                 <span className="flex items-center gap-1">
                   <FaCalendarAlt />
-                  {new Date(featuredNews.createdAt).toLocaleDateString()}
+                  {formatDate(featuredNews.createdAt)}
                 </span>
               </div>
             </div>
           </div>
         )}
-
-        {/* News Cards (NO CATEGORY) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {normalNews.map((item) => (
-            <div
-              key={item._id}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
-            >
-              <img
-                src={item.image} // If image is a filename, use: `http://localhost:9005/uploads/${item.image}`
-                alt={item.title}
-                className="w-full h-48 object-cover"
-              />        
-
-              <div className="p-4">
-                <h3 className="text-xl font-bold">
-                  {item.title}
-                </h3>        
-
-                <p className="text-gray-600 mt-2 text-sm">
-                  {item.description}
-                </p>        
-
-                <div className="flex justify-between mt-4 text-sm text-gray-500">
-                  <span className="flex items-center gap-1">
-                    <FaMapMarkerAlt />
-                    {item.location}
-                  </span>        
-
-                  <span className="flex items-center gap-1">
-                    <FaCalendarAlt />
-                    {new Date(item.createdAt).toLocaleDateString()}
-                  </span>
+          {normalNews.map(
+            ({ _id, image, title, description, location, createdAt, publisherName  }) => (
+              <div
+                key={_id}
+                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
+              >
+                <img
+                  src={image}
+                  alt={title}
+                  className="w-full h-48 object-contain"
+                />
+                <div className="p-4">
+                  <h3 className="text-xl font-bold">{title}</h3>
+                  <p className="text-xs text-teal-700 font-medium mt-1">
+                    Source: {publisherName}
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm">
+                    {description}
+                  </p>
+                  <div className="flex justify-between mt-4 text-sm text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <FaMapMarkerAlt />
+                      {location}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <FaCalendarAlt />
+                      {formatDate(createdAt)}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-       </div>
-
+            )
+          )}
+        </div>
       </div>
     </section>
   );
