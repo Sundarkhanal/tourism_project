@@ -18,9 +18,9 @@ class NewsService{
     }
 
     getPublicNewsData = (blogObj) => {
-        const {_id,title, description, location, publisherName, image } = blogObj
+        const {_id,title, description, location, publisherName, image, createdAt } = blogObj
         return{
-            _id,title, description, location, publisherName, image
+            _id,title, description, location, publisherName, image, createdAt
         }
     }
 
