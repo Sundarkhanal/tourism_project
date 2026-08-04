@@ -1,5 +1,7 @@
 import os
+import uuid
 import traceback
+from typing import Optional
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -7,6 +9,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from qdrant_client import QdrantClient
+from qdrant_client.models import PointStruct  # ADDED: Required for Qdrant point upserts
 
 load_dotenv()
 
@@ -31,6 +34,14 @@ COLLECTION_NAME = "batosanjaal_srs"
 
 class ChatRequest(BaseModel):
     message: str
+
+# ADDED: Pydantic model matching your MongoDB News Schema
+class NewsIngestRequest(BaseModel):
+    news_id: str
+    title: str
+    description: str
+    location: str
+    publisherName: Optional[str] = "Admin"
 
 
 @app.post("/api/transcribe")
@@ -113,6 +124,76 @@ async def chat_with_bot(request: ChatRequest):
 
     except Exception as e:
         print("\n=== CHAT ERROR TRACEBACK ===")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# =====================================================================
+# ADDED: REAL-TIME NEWS VECTOR INGESTION & DELETION ENDPOINTS
+# =====================================================================
+
+@app.post("/api/rag/ingest-news")
+async def ingest_single_news(news: NewsIngestRequest):
+    """Called automatically by Express Server whenever news is Created/Updated"""
+    try:
+        # Combine relevant fields for Gemini vector embedding
+        combined_text = (
+            f"News Title: {news.title}\n"
+            f"Location: {news.location}\n"
+            f"Publisher: {news.publisherName}\n"
+            f"Details: {news.description}"
+        )
+        
+        # 1. Generate Embedding using Gemini
+        embedding_response = ai_client.models.embed_content(
+            model="gemini-embedding-001",
+            contents=combined_text,
+            config=types.EmbedContentConfig(output_dimensionality=768)
+        )
+        vector = embedding_response.embeddings[0].values
+
+        # 2. Derive persistent UUID from MongoDB news_id string
+        point_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, news.news_id))
+
+        # 3. Upsert point into Qdrant
+        point = PointStruct(
+            id=point_id,
+            vector=vector,
+            payload={
+                "text": combined_text,
+                "title": news.title,
+                "location": news.location,
+                "source": f"Portal News ({news.location})",
+                "news_id": news.news_id,
+                "type": "news"
+            }
+        )
+
+        db_client.upsert(collection_name=COLLECTION_NAME, points=[point])
+
+        return {
+            "status": "success",
+            "message": f"News '{news.title}' processed and indexed in Qdrant successfully."
+        }
+
+    except Exception as e:
+        print("\n=== REALTIME NEWS INGESTION ERROR ===")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/api/rag/delete-news/{news_id}")
+async def delete_news_vector(news_id: str):
+    """Called automatically by Express Server whenever news is Deleted"""
+    try:
+        point_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, news_id))
+        db_client.delete(
+            collection_name=COLLECTION_NAME,
+            points_selector=[point_id]
+        )
+        return {"status": "success", "message": f"Vector for news_id {news_id} deleted from Qdrant."}
+    except Exception as e:
+        print("\n=== REALTIME NEWS DELETION ERROR ===")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
