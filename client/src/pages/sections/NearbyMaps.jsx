@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaMapMarkerAlt,
   FaLandmark,
@@ -7,14 +7,18 @@ import {
   FaWater,
   FaUtensils,
 } from "react-icons/fa";
+import { Map as GoogleMap, Marker } from "@vis.gl/react-google-maps";
 
 const categories = [
   "All",
-  "Temple",
+  "Religious Sites",
   "Lake",
   "Hiking",
   "Park",
   "Restaurant",
+  "Hospital",
+  "ATM",
+  "Police Station",  
 ];
 
 const legendItems = [
@@ -50,9 +54,158 @@ const legendItems = [
   },
 ];
 
+
 const NearbyMap = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [center, setCenter] = useState(null);
+  const [places, setPlaces] = useState([]);
 
+  useEffect(() => {
+    if (!navigator.geolocation){
+      alert("Geolocation is not supported by your browser:(");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setCenter({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+       },
+       (error) => {
+        console.error (error);
+        alert ("Unable to get your Location :(");
+
+       },
+       {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+       }
+    );
+  }, []);
+
+  const fetchNearbyPlaces = async () => {
+    if (!center) return;
+
+    try{
+      let types = [];
+
+      switch (selectedCategory){
+        case "All":
+          types = [
+            "hindu_temple",
+            "church",
+            "mosque",
+            "buddhist_temple",
+            "lake",
+            "hiking_area",
+            "park",
+            "restaurant",
+            "hospital",
+            "atm",
+            "police",
+          ];
+          break;
+          
+      case "Religious Sites":
+        types = [
+          "hindu_temple",
+          "church",
+          "mosque",
+          "buddhist_temple",
+        ];
+        break;
+
+      case "Lake":
+        types = ["lake"];
+        break;
+
+      case "Hiking":
+        types = ["hiking_area"];
+        break;
+
+      case "Park":
+        types = ["park"];
+        break;
+
+      case "Restaurant":
+        types = ["restaurant"];
+        break;
+
+      case "Hospital":
+        types = ["hospital"];
+        break;
+
+      case "ATM":
+        types = ["atm"];
+        break;
+
+      case "Police Station":
+        types = ["police"];
+        break;
+
+      default:
+        types = [];
+    }
+
+    let allPlaces = [];
+    for (const type of types){
+      const response = await fetch(
+        "https://places.googleapis.com/v1/places:searchNearby",
+        {
+          method: "POST",
+          headers:{
+            "Content-Type":"application/json",
+            "X-Goog-Api-Key": import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+            "X-Goog-FieldMask":
+            "places.displayName,places.location",
+          },
+          body: JSON.stringify({
+            includedTypes: [type],
+            maxResultCount: 20,
+            locationRestriction: {
+              circle:{
+                center:{
+                  latitude:center.lat,
+                  longitude: center.lng,
+                },
+                radius: 5000,
+              },
+
+            },
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error(type, data);
+        continue;
+      }
+
+      if (data.places){
+        allPlaces.push(...data.places);
+      }
+    }
+
+    const uniquePlaces = Array.from(
+      new Map(allPlaces.map((place) => [place.displayName.text, place])).values()
+    );
+
+    setPlaces(uniquePlaces);
+
+      } catch (error){
+        console.error ("Error Fetching nearby Places:", error);
+      }
+  };
+ 
+  useEffect(() => {
+  fetchNearbyPlaces();
+}, [center, selectedCategory]);
+  
   return (
     <section className="bg-gray-50 min-h-screen py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -105,28 +258,45 @@ const NearbyMap = () => {
 
         {/* Map Card */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
-          <div
-            id="galli-map"
-            className="w-full h-[650px] flex items-center justify-center bg-gray-100"
-          >
-            <div className="text-center">
-              <FaMapMarkerAlt className="text-5xl text-gray-400 mx-auto mb-4" />
-
-              <h3 className="text-xl font-semibold text-gray-700">
-                Galli Maps
-              </h3>
-
-              <p className="text-gray-500 mt-2">
-                Map will appear here after integration.
-              </p>
-            </div>
-          </div>
-        </div>
+          <div className="w-full h-[650px]">
+           {center ? (
+             <GoogleMap
+               defaultCenter={center}
+               defaultZoom={15}
+               gestureHandling="greedy"
+               disableDefaultUI={false}
+               style={{ width: "100%", height: "100%" }}
+               >
+                <Marker position = {center} 
+                   icon={{
+                     url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                   }}
+                />
+                {
+                  places.map((place) => (
+                    <Marker 
+                    key = {place.displayName.text}
+                    position = {{
+                      lat: place.location.latitude,
+                      lng: place.location.longitude,
+                    }}
+                    />
+                  ))
+                }
+                
+             </GoogleMap>
+           ) : (
+             <div className="w-full h-full flex items-center justify-center">
+               Getting your location...
+             </div>
+           )}
+         </div>
+         </div>
 
         {/* Footer Info */}
         <div className="mt-5 flex flex-wrap justify-between items-center text-sm text-gray-600">
           <p>
-            Showing <span className="font-semibold">0</span> nearby places
+            Showing <span className="font-semibold">{places.length}</span> nearby places
           </p>
         </div>
       </div>
