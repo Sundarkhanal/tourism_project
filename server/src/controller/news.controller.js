@@ -1,4 +1,38 @@
 const newsService = require("../services/news.service")
+const CHATBOT_SERVICE_URL = process.env.CHATBOT_SERVICE_URL
+
+/**
+ * Helper function to send news data to the Python Chatbot for Qdrant Vector indexing.
+ * Runs in the background without blocking Express HTTP responses.
+ */
+const syncNewsToQdrant = async (newsData) => {
+    if (!newsData || !newsData._id) return;
+
+    try {
+        const response = await axios.post(`${CHATBOT_SERVICE_URL}/api/rag/ingest-news`, {
+            news_id: newsData._id.toString(),
+            title: newsData.title,
+            description: newsData.description,
+            location: newsData.location,
+            publisherName: newsData.publisherName || "Admin"
+        });
+        console.log(`[Qdrant Sync Success] News Indexed: "${newsData.title}"`);
+    } catch (err) {
+        console.error(`[Qdrant Sync Error] Failed to index news:`, err.message);
+    }
+};
+
+/**
+ * Helper function to delete news vector from Qdrant using async/await and try/catch.
+ */
+const deleteNewsFromQdrant = async (newsId) => {
+    try {
+        const response = await axios.delete(`${CHATBOT_SERVICE_URL}/api/rag/delete-news/${newsId}`);
+        console.log(`[Qdrant Delete Success] Vector deleted for ID: ${newsId}`);
+    } catch (err) {
+        console.error(`[Qdrant Delete Error] Failed to delete vector:`, err.message);
+    }
+};
 
 class NewsController{
     createNews = async(req, res, next) => {
@@ -9,6 +43,7 @@ class NewsController{
                 data.image = req.file.path
             }
             const newsData = await newsService.createNews(data)
+            syncNewsToQdrant(newsData)
 
             res.json({
                 data: newsService.getPublicNewsData(newsData),
@@ -89,6 +124,7 @@ class NewsController{
                     status: "NOT_FOUND_ERR"
                 };
             }
+            syncNewsToQdrant(updatedData)
 
             res.json({
                 data: newsService.getPublicNewsData(updatedData),
@@ -107,14 +143,15 @@ class NewsController{
             const filter = {
                 _id: id
             }
-            const deletedBlog = await newsService.deleteSingleNews(filter)
-            if (!deletedBlog) {
+            const deletedNews = await newsService.deleteSingleNews(filter)
+            if (!deletedNews) {
                 throw {
                     code: 404,
                     message: "Blog not found.",
                     status: "NOT_FOUND_ERR"
                 };
             }
+            deleteNewsFromQdrant(id)
 
             res.json({
                 message:"News Deleted Successfully!",
