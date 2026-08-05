@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import { toast } from "sonner";
 
 import ProfileSidebar from "./ProfileSidebar";
 import Favorites from "./Favorites";
@@ -62,7 +63,7 @@ const Profile = () => {
     const id = String(destinationId || "");
 
     if (!id) {
-      alert("Destination ID not found");
+      toast.error("Destination ID not found");
       return;
     }
 

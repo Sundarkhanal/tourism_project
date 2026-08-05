@@ -44,7 +44,7 @@ const UpdateBlog = ({ isOpen, onClose, blog, onUpdate }) => {
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.message || "Unable to update story.");
+      toast.error("Unable to update story.");
     } finally {
       setLoading(false);
     }

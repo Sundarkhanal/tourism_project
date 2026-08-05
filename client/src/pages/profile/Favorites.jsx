@@ -98,7 +98,7 @@ const Favorites = ({
                   <div className="w-full sm:w-28 h-28 bg-gray-100 flex-shrink-0">
                     {place.image ? (
                       <img
-                        src={`http://localhost:9005/${place.image}`}
+                        src={`${place.image}`}
                         alt={place.name}
                         className="w-full h-full object-cover"
                       />

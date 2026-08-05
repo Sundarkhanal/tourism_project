@@ -2,7 +2,6 @@ import React from "react";
 import { FaClock, FaInfoCircle } from "react-icons/fa";
 import pic1 from "../../assets/pic1.jpeg";
 
-
 const packages = [
   {
     id: 1,

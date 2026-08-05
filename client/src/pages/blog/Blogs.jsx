@@ -62,7 +62,7 @@ const Blogs = () => {
       toast.success("Story deleted successfully.");
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.message || "Failed to delete story.");
+      toast.error("Failed to delete story.");
     }
   };
 

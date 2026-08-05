@@ -46,7 +46,7 @@ function Register() {
         );
 
         console.log(response.data);
-        alert("Registration Successful!");
+        toast.success("Registration Successful!");
         navigate("/activate-account", {
             state: {
                 email: formData.email,
@@ -55,10 +55,7 @@ function Register() {
 
     } catch (error) {
         console.log(error);
-
-        alert(
-        error.response?.data?.message || "Registration Failed"
-        );
+        toast.error( "Registration Failed");
     }
     };
 
@@ -94,7 +91,7 @@ return(
                     </div>
                     <div>
                         <label className=" mb-1 font-medium text-center text-gray-700">Password</label>
-                        <input type="password" name="password" placeholder="Min. 6 characters" value={formData.password} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
+                        <input type="password" name="password" placeholder="Min. 8 characters" value={formData.password} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
                     </div>
                     <div>
                         <label className=" mb-1 font-medium text-center text-gray-700">Confirm Password</label>
