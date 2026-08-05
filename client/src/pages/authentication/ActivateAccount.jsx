@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import api from "../../api/axios";
+import { toast } from "sonner";
 
 const ActivateAccount = () => {
   const navigate = useNavigate();
@@ -30,10 +31,10 @@ const ActivateAccount = () => {
     try {
       await api.post("/auth/activate-account", data);
 
-      alert("Account activated successfully!");
+      toast.success("Account activated successfully!");
       navigate("/login");
     } catch (err) {
-      alert(
+      toast.error(
         err.response?.data?.message ||
         "Failed to activate account. Please try again."
       );

@@ -8,6 +8,7 @@ import {
   FaMapMarkerAlt,
   FaArrowRight,
 } from "react-icons/fa";
+import { toast } from "sonner";
 
 function Destinations() {
   const navigate = useNavigate();
@@ -32,10 +33,26 @@ function Destinations() {
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
   const [favoriteLoadingId, setFavoriteLoadingId] = useState("");
+  const [selectedCategory, setSelectedCategory] =
+    useState("All Categories");
 
   const cities = [
     "All",
     ...new Set(destinationsData.map((destination) => destination.region)),
+  ];
+  const categories = [
+    "All Categories",
+    ...new Set(
+      destinationsData
+        .map((destination) => {
+          if (typeof destination.category === "string") {
+            return destination.category.trim();
+          }
+
+          return destination.category?.name;
+        })
+        .filter(Boolean)
+    ),
   ];
 
   useEffect(() => {
@@ -75,14 +92,19 @@ function Destinations() {
     }
   };
 
-  const filteredDestinations = destinationsData.filter(
-    (item) =>
-      item.name
-        ?.toLowerCase()
-        .includes(search.toLowerCase()) &&
-      (selectedCity === "All" ||
-        item.region === selectedCity)
-  );
+  const filteredDestinations = destinationsData.filter((item) => {
+    const itemCategory =
+      typeof item.category === "string"
+        ? item.category.trim()
+        : item.category?.name;
+
+    return (
+      item.name?.toLowerCase().includes(search.toLowerCase()) &&
+      (selectedCity === "All" || item.region === selectedCity) &&
+      (selectedCategory === "All Categories" ||
+        itemCategory === selectedCategory)
+    );
+  });
 
   const handleViewDetails = (id) => {
     navigate(`/destination/${id}`);
@@ -90,7 +112,7 @@ function Destinations() {
 
 const toggleFavorite = async (place) => {
   if (!userId) {
-    alert("Please log in to save favorites!");
+    toast.error("Please log in to save favorites!");
     navigate("/login");
     return;
   }
@@ -191,6 +213,19 @@ const toggleFavorite = async (place) => {
               ))}
             </select>
           </div>
+          <div className="lg:col-span-2">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full border rounded-xl py-1 px-4 border-gray-200 shadow bg-white cursor-pointer"
+            >
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="flex gap-3 overflow-x-auto py-8">
@@ -226,17 +261,13 @@ const toggleFavorite = async (place) => {
                 >
                   <div className="relative">
                     <img
-                      src={
-                        place.image
-                          ? `http://localhost:9005/${place.image}`
-                          : "https://via.placeholder.com/400x300?text=No+Image"
-                      }
+                      src={`${place.image}`}
                       alt={place.name}
                       className="w-full h-64 object-cover transition-transform duration-700 hover:scale-110"
                     />
 
                     <span className="absolute top-4 left-4 bg-teal-700 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      Tourist Destination
+                      {place.category || "Tourist Destination"}
                     </span>
 
                     <button

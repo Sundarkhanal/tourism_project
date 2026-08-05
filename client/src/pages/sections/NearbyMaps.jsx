@@ -7,6 +7,7 @@ import {
   FaWater,
   FaUtensils,
 } from "react-icons/fa";
+import { toast } from "sonner";
 import { Map as GoogleMap, Marker } from "@vis.gl/react-google-maps";
 
 const categories = [
@@ -62,7 +63,7 @@ const NearbyMap = () => {
 
   useEffect(() => {
     if (!navigator.geolocation){
-      alert("Geolocation is not supported by your browser:(");
+      toast.error("Geolocation is not supported by your browser:(");
       return;
     }
 
@@ -75,7 +76,7 @@ const NearbyMap = () => {
        },
        (error) => {
         console.error (error);
-        alert ("Unable to get your Location :(");
+        toast.error ("Unable to get your Location :(");
 
        },
        {

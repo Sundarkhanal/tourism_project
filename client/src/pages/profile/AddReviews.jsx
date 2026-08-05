@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import api from "../../api/axios";
+import { toast } from "sonner";
 import { FaStar, FaRegStar, FaMapMarkerAlt, FaHeart, FaUser, FaPen } from "react-icons/fa";
 
 const AddReview = ({ user, activeTab, setActiveTab, favoriteCount = 0 }) => {
@@ -12,7 +13,7 @@ const AddReview = ({ user, activeTab, setActiveTab, favoriteCount = 0 }) => {
     e.preventDefault();
 
     if (!rating) {
-      alert("Please select a rating");
+      toast.error("Please select a rating");
       return;
     }
 
@@ -23,14 +24,14 @@ const AddReview = ({ user, activeTab, setActiveTab, favoriteCount = 0 }) => {
         review_text: review,
       });
 
-      alert("Review submitted successfully!");
+      toast.success("Review submitted successfully!");
       setLocation("");
       setReview("");
       setRating(0);
       setHoverRating(0);
     } catch (error) {
       console.error(error);
-      alert("Failed to submit review");
+      toast.error("Failed to submit review");
     }
   };
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaTimes, FaCloudUploadAlt } from "react-icons/fa";
+import { toast } from "sonner";
 import api from "../../api/axios";
+
 
 const UpdateBlog = ({ isOpen, onClose, blog, onUpdate }) => {
   const [description, setDescription] = useState("");
@@ -35,14 +37,14 @@ const UpdateBlog = ({ isOpen, onClose, blog, onUpdate }) => {
         },
       });
 
-      alert("Story updated successfully!");
+      toast.success("Story updated successfully!");
 
       if (onUpdate) onUpdate();
 
       onClose();
     } catch (error) {
       console.error(error);
-      alert(error.response?.data?.message || "Unable to update story.");
+      toast.error(error.response?.data?.message || "Unable to update story.");
     } finally {
       setLoading(false);
     }

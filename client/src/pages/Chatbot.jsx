@@ -4,6 +4,7 @@ import {
   FaMicrophone,
   FaVolumeHigh,
 } from "react-icons/fa6";
+import { toast } from "sonner";
 import chatbotService from "../services/chatbot.service";
 
 function Chatbot() {
@@ -73,7 +74,7 @@ function Chatbot() {
         }
       } catch (error) {
         console.error("Transcription error:", error);
-        alert("Failed to transcribe audio. Please try again.");
+        toast.error("Failed to transcribe audio. Please try again.");
       } finally {
         setTranscribing(false);
       }

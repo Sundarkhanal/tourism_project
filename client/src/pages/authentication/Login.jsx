@@ -3,6 +3,7 @@ import api from "../../api/axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { toast } from 'sonner';
 
 function Login(){
     const navigate = useNavigate();
@@ -29,17 +30,12 @@ function Login(){
             }
 
             console.log("Saved Token:", localStorage.getItem("token"));
-            alert("Login Successful!");
+            toast.success("Login Successful!");
             navigate("/");
         } catch (error) {
             console.log(error);
-
-            if (error.response) {
-            console.log(error.response.data);
-            alert(error.response.data.message || "Login Failed");
-            } else {
-            alert(error.message);
-            }
+            const errorMessage = error.response?.data?.message || "Login Failed";
+            toast.error(error.message);
         }
     };
 
@@ -61,7 +57,7 @@ function Login(){
                 <button type="submit" className="w-full px-4 py-3 font-semibold text-white transition duration-300 rounded-2xl bg-teal-600 hover:bg-teal-700 shadow-lg">Login</button>
             </form>
             <div className="mt-1 flex flex-col items-center justify-between sm:flex-row">
-                <Link to="/forgotpassword" onClick={() => navigate("/forgotPassword")} className=" text-sm font-semibold text-slate-900 hover:underline">
+                <Link to="/forgotpassword" className=" text-sm font-semibold text-slate-900 hover:underline">
                     Forgot Password? 
                 </Link>
             </div>
