@@ -28,7 +28,6 @@ if not db_client.collection_exists(COLLECTION_NAME):
 else:
     print(f"Collection '{COLLECTION_NAME}' already exists.")
 
-# Ensure data directory exists
 if not os.path.exists(DATA_FOLDER):
     print(f"⚠️ Folder '{DATA_FOLDER}' not found. Please create it and add your files.")
     exit()
