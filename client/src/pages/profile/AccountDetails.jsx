@@ -119,7 +119,7 @@ const AccountDetails = ({
                 onClick={onLogout} 
                 className="w-fit px-6 py-3 border border-red-300 text-red-600 font-medium 
                 rounded-lg flex items-center justify-center gap-2 
-                hover:bg-red-50 transition"
+                hover:bg-red-50 transition cursor-pointer"
               >
                 <FaSignOutAlt />
                 Sign Out

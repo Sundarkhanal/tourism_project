@@ -33,12 +33,12 @@ const BlogCard = ({
         </div>
 
         {/* Menu */}
-        <div className="relative">
+        <div className="relative ">
           <button
             onClick={() =>
               setActiveMenu(activeMenu === blog._id ? null : blog._id)
             }
-            className="p-2 rounded-full hover:bg-gray-100"
+            className="p-2 rounded-full hover:bg-gray-100 cursor-pointer"
           >
             <FaEllipsisH />
           </button>

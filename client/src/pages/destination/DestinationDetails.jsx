@@ -73,7 +73,7 @@ const DestinationDetails = () => {
   location,
   category = "Tourist Destination",
   rating = 4.0,
-  price= "Updating soon",
+  price= "Free",
 } = destination;
 
 const longitude = location?.coordinates?.[0];
@@ -89,7 +89,7 @@ const latitude = location?.coordinates?.[1];
       <div className="max-w-6xl mx-auto px-4 pt-8">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-gray-700 hover:text-black hover:!bg-transparent"
+          className="flex items-center gap-2 text-gray-600 hover:text-black hover:!bg-transparent cursor-pointer"
         >
           <FaArrowLeft />
           Back to Destinations

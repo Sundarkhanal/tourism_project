@@ -183,7 +183,7 @@ function Chatbot() {
                   {chatMessage.sender === "bot" && (
                     <button type="button" 
                       onClick={() => readAloud(chatMessage.text)}
-                      className="mt-1 flex items-center gap-2 rounded-full px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
+                      className="mt-1 flex items-center gap-2 rounded-full px-2 py-1 text-sm text-gray-500 hover:bg-gray-100 cursor-pointer"
                     >
                       <FaVolumeHigh />
                       {speaking ? "Stop" : "Read Aloud"}
@@ -221,7 +221,7 @@ function Chatbot() {
             type="button"
             onClick={recording ? stopRecording : startRecording}
             disabled={transcribing || loading}
-              className={`flex h-10 w-10 items-center justify-center rounded-full ${
+              className={`flex h-10 w-10 items-center justify-center rounded-full cursor-pointer ${
                 recording
                   ? "bg-red-500 text-white"
                   : "text-gray-600 hover:bg-gray-100"
@@ -234,7 +234,7 @@ function Chatbot() {
           <button
             type="submit"
             disabled={!message.trim() || loading || recording || transcribing }
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-white disabled:bg-gray-300"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-white disabled:bg-gray-300 cursor-pointer"
           >
             <FaArrowUp />
           </button>

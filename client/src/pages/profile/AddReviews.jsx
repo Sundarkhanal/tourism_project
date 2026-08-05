@@ -114,10 +114,10 @@ const AddReview = ({ user, activeTab, setActiveTab, favoriteCount = 0 }) => {
                   onClick={() => setRating(star)}
                   onMouseEnter={() => setHoverRating(star)}
                   onMouseLeave={() => setHoverRating(0)}
-                  className="focus:outline-none transition-transform hover:scale-110"
+                  className="focus:outline-none transition-transform hover:scale-110 cursor-pointer"
                 >
                   {star <= (hoverRating || rating) ? (
-                    <FaStar className="text-yellow-400 text-2xl" />
+                    <FaStar className="text-yellow-400 text-2xl " />
                   ) : (
                     <FaRegStar className="text-gray-300 text-2xl" />
                   )}
@@ -147,7 +147,7 @@ const AddReview = ({ user, activeTab, setActiveTab, favoriteCount = 0 }) => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium px-6 py-2.5 rounded-xl transition shadow-sm hover:shadow-md"
+            className="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium px-6 py-2.5 rounded-xl transition shadow-sm hover:shadow-md cursor-pointer"
           >
             Submit Review
           </button>

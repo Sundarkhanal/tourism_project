@@ -77,7 +77,7 @@ const ReviewsStories = () => {
               {/* Left Button */}
               <button
                 onClick={prevSlide}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-gray-100 hover:bg-gray-200 w-12 h-12 rounded-full flex items-center justify-center"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-gray-100 hover:bg-gray-200 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer"
               >
                 <FaArrowLeft />
               </button>
@@ -147,7 +147,7 @@ const ReviewsStories = () => {
               {/* Right Button */}
               <button
                 onClick={nextSlide}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-gray-100 hover:bg-gray-200 w-12 h-12 rounded-full flex items-center justify-center"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-gray-100 hover:bg-gray-200 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer"
               >
                 <FaArrowRight />
               </button>

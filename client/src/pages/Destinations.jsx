@@ -233,7 +233,7 @@ const toggleFavorite = async (place) => {
             <button
               key={city}
               onClick={() => setSelectedCity(city)}
-              className={`px-4 py-1 rounded-xl whitespace-nowrap border-gray-200 shadow transition ${
+              className={`px-4 py-1 rounded-xl whitespace-nowrap border-gray-200 shadow transition cursor-pointer ${
                 selectedCity === city
                   ? "bg-teal-700 text-white"
                   : "bg-white border hover:bg-gray-100"
@@ -311,7 +311,7 @@ const toggleFavorite = async (place) => {
                       onClick={() =>
                         handleViewDetails(place._id)
                       }
-                      className="w-full mt-6 border border-gray-300 rounded-xl py-3 flex items-center justify-center gap-2 hover:bg-teal-700 hover:text-white transition"
+                      className="w-full mt-6 border border-gray-300 rounded-xl py-3 flex items-center justify-center gap-2 hover:bg-teal-700 hover:text-white transition cursor-pointer"
                     >
                       View Details
                       <FaArrowRight />

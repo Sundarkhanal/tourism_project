@@ -90,7 +90,7 @@ const Favorites = ({
               favorite.destination_id || favorite;
 
             return (
-              <div
+              <div 
                 key={favorite._id || place._id}
                 className="flex flex-col sm:flex-row items-center justify-between bg-white border rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden"
               >
@@ -135,7 +135,7 @@ const Favorites = ({
                         favorite._id || place._id
                       )
                     }
-                    className="text-red-500 hover:text-red-700 transition"
+                    className="text-red-500 hover:text-red-700 transition cursor-pointer"
                   >
                     <FaTrashAlt size={20} />
                   </button>
