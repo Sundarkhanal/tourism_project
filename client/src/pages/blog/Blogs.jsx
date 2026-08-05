@@ -62,7 +62,7 @@ const Blogs = () => {
       toast.success("Story deleted successfully.");
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.message || "Failed to delete story.");
+      toast.error("Failed to delete story.");
     }
   };
 
@@ -80,7 +80,7 @@ const Blogs = () => {
               </div>
               <button 
                 onClick={handleShareStory}
-                className="bg-white text-teal-700 px-5 py-2.5 rounded-full font-semibold flex items-center gap-2 shadow-md hover:scale-105 transition text-sm md:text-base"
+                className="bg-white text-teal-700 px-5 py-2.5 rounded-full font-semibold flex items-center gap-2 shadow-md cursor-pointer hover:scale-105 transition text-sm md:text-base"
               >
                 <FaCamera /> Share Story
               </button>

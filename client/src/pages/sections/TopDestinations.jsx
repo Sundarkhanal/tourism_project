@@ -38,7 +38,7 @@ const TopDestinations = () => {
 
         <Link
           to="/destinations"
-          className="flex items-center gap-2 text-teal-700 hover:text-blue-700 font-medium"
+          className="flex items-center gap-2 text-teal-700 hover:text-yellow-700 font-medium"
         >
           View All <FaArrowRight />
         </Link>

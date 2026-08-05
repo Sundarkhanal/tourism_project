@@ -8,7 +8,6 @@ import {
   FaPen,
   FaUser,
 } from "react-icons/fa";
-import { toast } from "sonner";
 
 const ProfileSidebar = ({
   user,

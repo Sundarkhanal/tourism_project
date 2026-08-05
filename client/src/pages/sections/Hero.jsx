@@ -42,6 +42,7 @@ function Hero({ onDiscover }) {
                 text-lg
                 hover:bg-teal-700
                 transition duration-300
+                cursor-pointer
               "
             >
               <FaMapMarkedAlt />

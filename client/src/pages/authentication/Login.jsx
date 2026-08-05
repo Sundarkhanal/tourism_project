@@ -34,8 +34,7 @@ function Login(){
             navigate("/");
         } catch (error) {
             console.log(error);
-            const errorMessage = error.response?.data?.message || "Login Failed";
-            toast.error(error.message);
+            toast.error("Login Failed");
         }
     };
 

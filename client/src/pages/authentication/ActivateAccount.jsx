@@ -34,10 +34,8 @@ const ActivateAccount = () => {
       toast.success("Account activated successfully!");
       navigate("/login");
     } catch (err) {
-      toast.error(
-        err.response?.data?.message ||
-        "Failed to activate account. Please try again."
-      );
+      console.log(error);
+      toast.error("Failed to activate account. Please try again.");
     }
   };
 
@@ -49,12 +47,10 @@ const ActivateAccount = () => {
         email,
       });
 
-      alert("A new verification code has been sent.");
+      toast.success("A new verification code has been sent.");
     } catch (err) {
-      alert(
-        err.response?.data?.message ||
-          "Failed to resend verification code."
-      );
+      console.log(error);
+      toast.error("Failed to resend verification code.");
     } finally {
       setLoading(false);
     }
