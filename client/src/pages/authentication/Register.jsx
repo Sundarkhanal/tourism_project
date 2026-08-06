@@ -15,6 +15,7 @@ function Register() {
         name:"",
         email: "",
         password: "",
+        confirmPassword:"",
         address:"",
         phone:"",
         gender:"", 
@@ -31,9 +32,7 @@ function Register() {
     e.preventDefault();
 
     try {
-        const response = await axios.post(
-        "http://localhost:9005/api/v1/auth/register",
-        formData
+        const response = await axios.post("/auth/register",formData
         // { can write this but is long as formdata contains all the req fields
         //     name: formData.name,
         //     email: formData.email,
@@ -42,7 +41,6 @@ function Register() {
         //     address: formData.address,
         //     gender: formData.gender,
         // }
-        
         );
 
         console.log(response.data);
@@ -95,7 +93,7 @@ return(
                     </div>
                     <div>
                         <label className=" mb-1 font-medium text-center text-gray-700">Confirm Password</label>
-                        <input type="password" name="confirmPassword" placeholder="Min. 6 characters" value={formData.confirmPassword} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
+                        <input type="password" name="confirmPassword" placeholder="Re-enter password" value={formData.confirmPassword} onChange={handleChange} required className="w-full px-4 py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 transition" />
                     </div>
                     <div>
                         <label className=" mb-1 font-medium text-center text-gray-700">Phone</label>

@@ -6,6 +6,7 @@ import {
 } from "react-icons/fa6";
 import { toast } from "sonner";
 import chatbotService from "../services/chatbot.service";
+import ReactMarkdown from "react-markdown";
 
 function Chatbot() {
   const [message, setMessage] = useState("");
@@ -173,11 +174,18 @@ function Chatbot() {
                   className={`max-w-[80%] ${chatMessage.sender === "user" ? "ml-auto" : "mr-auto"
                   }`}
                 >
-                  <div className={`rounded-3xl px-5 py-3 ${
-                    chatMessage.sender === "user" ? "bg-gray-900 text-white" : "bg-gray-200 text-gray-900"
+                  <div
+                    className={`rounded-3xl px-5 py-3 ${
+                      chatMessage.sender === "user"
+                        ? "bg-gray-900 text-white"
+                        : "bg-gray-200 text-gray-900 prose prose-sm max-w-none"
                     }`}
                   >
-                    {chatMessage.text}
+                    {chatMessage.sender === "bot" ? (
+                      <ReactMarkdown>{chatMessage.text}</ReactMarkdown>
+                    ) : (
+                      chatMessage.text
+                    )}
                   </div>
 
                   {chatMessage.sender === "bot" && (

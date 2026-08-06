@@ -88,16 +88,15 @@ const News = () => {
                 />
                 <div className="p-4">
                   <h3 className="text-xl font-bold">{title}</h3>
-                  <p className="text-xs text-teal-700 font-medium mt-1">
-                    Source: {publisherName}
+                  <p className="text-xs text-teal-700 font-medium mt-1 flex items-center gap-1">
+                    <FaMapMarkerAlt />{location}
                   </p>
-                  <p className="text-gray-600 mt-2 text-sm">
+                  <p className="text-gray-600 mt-2 text-sm text-justify">
                     {description}
                   </p>
                   <div className="flex justify-between mt-4 text-sm text-gray-500">
                     <span className="flex items-center gap-1">
-                      <FaMapMarkerAlt />
-                      {location}
+                      Source: {publisherName}
                     </span>
                     <span className="flex items-center gap-1">
                       <FaCalendarAlt />

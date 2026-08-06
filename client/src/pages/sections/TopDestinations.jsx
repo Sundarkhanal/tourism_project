@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
-
+import api from "../../api/axios";
 const TopDestinations = () => {
   //add data from  backend
   const [destinations, setDestinations] = useState([]);
 
   useEffect(() => {
-    //Replace with an API call later
-
-
-    // Temporary dummy data
-    setDestinations([
-      {
-        _id: 1,
-        name: "Kathmandu",
-        description: "Ancient temples & vibrant streets",
-        image:
-          "https://images.unsplash.com/photo-1558799401-1dcba79834c2?w=600&q=80",
-      },
-
-    ]);
+    const fetchTopDestinations = async () => {
+      try {
+        const response = await api.get("/destination/all-destinations");
+        const allDestinations = response.data?.data || [];
+        //show only 1st 4 destinations
+        setDestinations(allDestinations.slice(0, 4));
+      } catch (error) {
+        console.error("Error fetching destinations:", error);
+      }
+    }
+    fetchTopDestinations();
   }, []);
 
   return (
