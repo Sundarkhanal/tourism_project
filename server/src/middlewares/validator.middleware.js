@@ -4,7 +4,7 @@ module.exports = (rules) => {
         try {
             const data = req.body
             if (req.file) {
-                data.image = req.file.filename;
+                data.image = req.file.path;
             }
             if (!data) {
                 throw{
@@ -13,6 +13,7 @@ module.exports = (rules) => {
                     status: "EMPTY_PAYLOAD_ERR"
                 }
             }
+            //it validates all fields and provides validation error at last
             await rules.validateAsync(data,{
                 abortEarly: false
             })

@@ -8,7 +8,7 @@ class NewsService{
             return createdNews
             
         } catch (exception) {
-            console.log(exception);
+            // console.log(exception);
             
             throw{
                 code: 422,
