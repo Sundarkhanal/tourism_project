@@ -12,7 +12,7 @@ const NewsSchema = new mongoose.Schema({
         type: String,
         required: true,
         min: 10,
-        max: 255,
+        max: 2000,
     },
     location: {
         type: String,
