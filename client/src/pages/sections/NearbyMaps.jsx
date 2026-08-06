@@ -26,40 +26,83 @@ const legendItems = [
   {
     label: "Your Location",
     color: "bg-blue-500",
-    icon: <FaMapMarkerAlt className="text-blue-500" />,
   },
   {
-    label: "Temple",
+    label: "Religious Sites",
     color: "bg-green-500",
-    icon: <FaLandmark className="text-green-500" />,
   },
   {
     label: "Lake",
     color: "bg-cyan-500",
-    icon: <FaWater className="text-cyan-500" />,
   },
   {
     label: "Hiking",
     color: "bg-orange-500",
-    icon: <FaMountain className="text-orange-500" />,
   },
   {
     label: "Park",
     color: "bg-emerald-500",
-    icon: <FaTree className="text-emerald-500" />,
   },
   {
     label: "Restaurant",
     color: "bg-red-500",
-    icon: <FaUtensils className="text-red-500" />,
+  },
+  {
+    label: "Hospital",
+    color: "bg-pink-500",
+  },
+  {
+    label: "ATM",
+    color: "bg-yellow-500",
+  },
+  {
+    label: "Police Station",
+    color: "bg-indigo-500",
   },
 ];
+
+const markerIcons = {
+  hindu_temple: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+  church: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+  mosque: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+  buddhist_temple: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+
+  lake: "https://maps.google.com/mapfiles/ms/icons/ltblue-dot.png",
+
+  hiking_area: "https://maps.google.com/mapfiles/ms/icons/orange-dot.png",
+
+  park: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+
+  restaurant: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+
+  hospital: "https://maps.google.com/mapfiles/ms/icons/pink-dot.png",
+
+  atm: "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+
+  police: "https://maps.google.com/mapfiles/ms/icons/purple-dot.png",
+};
 
 
 const NearbyMap = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [center, setCenter] = useState(null);
-  const [places, setPlaces] = useState([]);
+  const [allPlaces, setAllPlaces] = useState([]);
+
+  const categoryMap = {
+    "Religious Sites": [
+      "hindu_temple",
+      "church",
+      "mosque",
+      "buddhist_temple",
+    ],
+    "Lake": ["lake"],
+    "Hiking": ["hiking_area"],
+    "Park": ["park"],
+    "Restaurant": ["restaurant"],
+    "Hospital": ["hospital"],
+    "ATM": ["atm"],
+    "Police Station": ["police"],
+  };
 
   useEffect(() => {
     if (!navigator.geolocation){
@@ -67,7 +110,7 @@ const NearbyMap = () => {
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(
+  navigator.geolocation.getCurrentPosition(
       (position) => {
         setCenter({
           lat: position.coords.latitude,
@@ -91,65 +134,20 @@ const NearbyMap = () => {
     if (!center) return;
 
     try{
-      let types = [];
-
-      switch (selectedCategory){
-        case "All":
-          types = [
-            "hindu_temple",
-            "church",
-            "mosque",
-            "buddhist_temple",
-            "lake",
-            "hiking_area",
-            "park",
-            "restaurant",
-            "hospital",
-            "atm",
-            "police",
-          ];
-          break;
-          
-      case "Religious Sites":
-        types = [
+      const types = [
           "hindu_temple",
           "church",
           "mosque",
           "buddhist_temple",
-        ];
-        break;
+          "lake",
+          "hiking_area",
+          "park",
+          "restaurant",
+          "hospital",
+          "atm",
+          "police",
+      ];
 
-      case "Lake":
-        types = ["lake"];
-        break;
-
-      case "Hiking":
-        types = ["hiking_area"];
-        break;
-
-      case "Park":
-        types = ["park"];
-        break;
-
-      case "Restaurant":
-        types = ["restaurant"];
-        break;
-
-      case "Hospital":
-        types = ["hospital"];
-        break;
-
-      case "ATM":
-        types = ["atm"];
-        break;
-
-      case "Police Station":
-        types = ["police"];
-        break;
-
-      default:
-        types = [];
-    }
 
     let allPlaces = [];
     for (const type of types){
@@ -161,7 +159,7 @@ const NearbyMap = () => {
             "Content-Type":"application/json",
             "X-Goog-Api-Key": import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
             "X-Goog-FieldMask":
-            "places.displayName,places.location",
+            "places.displayName,places.location,places.types",
           },
           body: JSON.stringify({
             includedTypes: [type],
@@ -181,6 +179,7 @@ const NearbyMap = () => {
       );
 
       const data = await response.json();
+      console.log(data.places);
 
       if (!response.ok) {
         console.error(type, data);
@@ -193,19 +192,64 @@ const NearbyMap = () => {
     }
 
     const uniquePlaces = Array.from(
-      new Map(allPlaces.map((place) => [place.displayName.text, place])).values()
+      new Map(
+        allPlaces.map((place) => [
+          `${place.displayName.text}-${place.location.latitude}-${place.location.longitude}`,
+          place,
+        ])
+      ).values()
     );
 
-    setPlaces(uniquePlaces);
+    setAllPlaces(uniquePlaces);
 
       } catch (error){
         console.error ("Error Fetching nearby Places:", error);
       }
-  };
+    };
  
   useEffect(() => {
+    if (center){
   fetchNearbyPlaces();
-}, [center, selectedCategory]);
+    }
+}, [center]);
+
+
+const businessTypes = [
+  "travel_agency",
+  "tourist_information_center",
+  "lodging",
+  "store",
+  "sports_activity_location"
+];
+
+const filteredPlaces =
+  selectedCategory === "All"
+    ? allPlaces
+    : allPlaces.filter((place) => {
+        const matchesCategory = place.types?.some((type) =>
+          categoryMap[selectedCategory]?.includes(type)
+        );
+
+        if (!matchesCategory) return false;
+
+        if (selectedCategory === "Hiking" || "Lake") {
+          return !place.types?.some((type) =>
+            businessTypes.includes(type)
+          );
+        }
+
+        return true;
+      });
+
+      const getMarkerIcon = (types = []) => {
+            for (const type of types) {
+              if (markerIcons[type]) {
+                return markerIcons[type];
+              }
+            }
+          
+        return "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
+      };
   
   return (
     <section className="bg-gray-50 min-h-screen py-16">
@@ -268,22 +312,25 @@ const NearbyMap = () => {
                disableDefaultUI={false}
                style={{ width: "100%", height: "100%" }}
                >
-                <Marker position = {center} 
-                   icon={{
-                     url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-                   }}
+                <Marker
+                  position={center}
+                  icon={{
+                    url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                  }}
                 />
-                {
-                  places.map((place) => (
-                    <Marker 
-                    key = {place.displayName.text}
-                    position = {{
+                
+                {filteredPlaces.map((place) => (
+                  <Marker
+                    key={`${place.displayName.text}-${place.location.latitude}-${place.location.longitude}`}
+                    position={{
                       lat: place.location.latitude,
                       lng: place.location.longitude,
                     }}
-                    />
-                  ))
-                }
+                    icon={{
+                      url: getMarkerIcon(place.types),
+                    }}
+                  />
+                ))}
                 
              </GoogleMap>
            ) : (
@@ -297,7 +344,7 @@ const NearbyMap = () => {
         {/* Footer Info */}
         <div className="mt-5 flex flex-wrap justify-between items-center text-sm text-gray-600">
           <p>
-            Showing <span className="font-semibold">{places.length}</span> nearby places
+            Showing <span className="font-semibold">{filteredPlaces.length}</span> nearby places
           </p>
         </div>
       </div>
