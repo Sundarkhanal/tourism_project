@@ -26,9 +26,9 @@ class UserService{
     }
 
     getPublicUserProfile(userObj){
-        const {_id, name, email, phone, address, gender, createdAt, updatedAt} = userObj
+        const {_id, name, email, phone, address,role, gender, createdAt, updatedAt} = userObj
         return{
-            _id, name, email, phone, address, gender, createdAt, updatedAt
+            _id, name, email, phone, address,role, gender, createdAt, updatedAt
         } 
     }
 
