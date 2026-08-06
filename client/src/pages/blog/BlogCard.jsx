@@ -10,16 +10,24 @@ const BlogCard = ({
 
     
   const [activeMenu, setActiveMenu] = useState(null);
-  const displayName = blog.user_id?.name || "Anonymous";
   console.log("createdAt:", blog.createdAt);
+  const displayName = blog.name || "Anonymous";
+
+  const currentUserId =
+    currentUser?._id || currentUser?.id;
+
+  const blogOwnerId =
+    blog.u_id?._id ||
+    blog.u_id?.id ||
+    blog.u_id;
 
   const isOwner =
-    currentUser?._id &&
-    String(currentUser._id) ===
-      String(blog.user_id?._id || blog.user_id);
+    Boolean(currentUserId) &&
+    Boolean(blogOwnerId) &&
+    String(currentUserId) === String(blogOwnerId);
 
   return (
-    <div className="bg-color-card rounded-3xl shadow-md overflow-hidden">
+    <div className="bg-color-card rounded-3xl shadow-md overflow-hidden mb-4">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4">
         <div className="flex items-center gap-2">
@@ -88,11 +96,13 @@ const BlogCard = ({
 
       {/* Image */}
       {blog.image && (
-        <img
-          src={`${blog.image}`}
-          alt="Travel"
-          className="w-full h-96 object-cover"
-        />
+        <div className="w-full bg-gray-100 rounded-lg overflow-hidden flex justify-center">
+          <img
+            src={blog.image}
+            alt="Travel"
+            className="w-full h-auto object-cover max-h-[550px]"
+          />
+        </div>
       )}
 
       {/* Description */}
