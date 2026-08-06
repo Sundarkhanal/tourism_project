@@ -46,7 +46,7 @@ const TopDestinations = () => {
         {destinations.map((destination) => (
           <Link
             key={destination._id}
-            to={`/destinations/${destination._id}`}
+            to={`/destination/${destination._id}`}
             className="group relative overflow-hidden rounded-xl aspect-[3/4]"
           >
             <img
