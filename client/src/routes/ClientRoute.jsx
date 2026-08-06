@@ -6,7 +6,7 @@ import Home from "../pages/Home";
 import Profile from "../pages/profile/Profile";
 import News from "../pages/News";
 import Blogs from "../pages/blog/Blogs";
-import Destinations from "../pages/Destinations";
+import Destinations from "../pages/destination/Destinations";
 import Chatbot from "../pages/Chatbot";
 import DestinationDetails from "../pages/destination/DestinationDetails";
 
