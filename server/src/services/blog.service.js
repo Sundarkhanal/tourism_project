@@ -18,9 +18,9 @@ class BlogService{
     }
 
     getPublicBlogData = (blogObj) => {
-        const {_id, description, image, user_id, createdAt} = blogObj
+        const {_id, description, image, user_id} = blogObj
         return{
-            _id, description, image, name:user_id.name, createdAt
+            _id, description, image, u_id:user_id._id
         }
     }
 
