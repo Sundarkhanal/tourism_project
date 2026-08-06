@@ -21,7 +21,7 @@ app.use(helmet({
 }))
 
 const limiter = rateLimit({
-    windowMs: 1*60*100,
+    windowMs: 1*60*1000,
     limit: 20,
 
 })
