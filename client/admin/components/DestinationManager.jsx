@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import api from "../../src/api/axios";
 import { FaEdit, FaMapMarkerAlt, FaPlus, FaTrash } from "react-icons/fa";
 
-
 function DestinationManager() {
   const [destinations, setDestinations] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -27,19 +26,18 @@ function DestinationManager() {
     "National Park",
   ];
 
- const fetchDestinations = useCallback (async () => {
-      try{
-        const response = await api.get("/destination/all-destinations");
-        setDestinations (response.data.data || response.data);
-      } catch (error){
-        console.error("Error Fetching Destinations:", error);
-      }
-    }, []);
+  const fetchDestinations = useCallback(async () => {
+    try {
+      const response = await api.get("/destination/all-destinations");
+      setDestinations(response.data.data || response.data);
+    } catch (error) {
+      console.error("Error Fetching Destinations:", error);
+    }
+  }, []);
 
-    useEffect (() => {
-      fetchDestinations();
-    }, [fetchDestinations]);
-
+  useEffect(() => {
+    fetchDestinations();
+  }, [fetchDestinations]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -76,80 +74,118 @@ function DestinationManager() {
   };
 
   const handleDelete = async (id) => {
-      if (!window.confirm("Are you sure you want to delete this destination?")) return;
-    
-      try {
-        await api.delete(`/destination/delete/${id}`);
-    
-        setDestinations((prev) => prev.filter((item) => item._id !== id));
-    
-        alert("Destination deleted successfully.");
-      } catch (error) {
-        console.error(error);
-        alert("Failed to delete Destination.");
+    if (!window.confirm("Are you sure you want to delete this destination?"))
+      return;
+
+    try {
+      await api.delete(`/destination/delete/${id}`);
+
+      setDestinations((prev) => prev.filter((item) => item._id !== id));
+
+      alert("Destination deleted successfully.");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete Destination.");
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const form = new FormData();
+
+      form.append("name", formData.name);
+      form.append("region", formData.region);
+      form.append("category", formData.category);
+      form.append("latitude", formData.latitude);
+      form.append("longitude", formData.longitude);
+      form.append("description", formData.description);
+
+      if (selectedImage && typeof selectedImage !== "String") {
+        form.append("image", selectedImage);
       }
-    };
 
-   const handleSave = async () => {
-      try {
-        const form = new FormData();
-    
-        form.append("name", formData.name);
-        form.append("region", formData.region);
-        form.append("category", formData.category);
-        form.append("latitude", formData.latitude);
-        form.append("longitude", formData.longitude);
-        form.append("description", formData.description);
-    
-        if (selectedImage && typeof selectedImage !== "String") {
-          form.append("image", selectedImage);
-        }
-
-        if (editingId === null) {
-          // Create News
-          await api.post("/destination/create-destinations", form);
-          alert("Destination created successfully.");
-        } else {
-          // Update News
-          await api.put(`/destination/update/${editingId}`, form);
-          alert("Destination updated successfully.");
-        }
-    
-        // Refresh the news list
-        await fetchDestinations();
-    
-        // Close modal
-        setShowModal(false);
-    
-        // Reset everything
-        setEditingId(null);
-        setSelectedImage(null);
-    
-        setFormData({
-           name: "",
-      region: "",
-      category: "",
-      latitude: "",
-      longitude: "",
-      description: "",
-      image: null,
-        });
-      } catch (error) {
-        console.log("Status:", error.response?.status);
-  console.log("Data:", error.response?.data);
-  console.log("Errors:", error.response?.data?.errors);
-        console.error(error);
-        alert("Something went wrong.");
+      if (editingId === null) {
+        // Create News
+        await api.post("/destination/create-destinations", form);
+        alert("Destination created successfully.");
+      } else {
+        // Update News
+        await api.put(`/destination/update/${editingId}`, form);
+        alert("Destination updated successfully.");
       }
-    };
 
+      // Refresh the news list
+      await fetchDestinations();
+
+      // Close modal
+      setShowModal(false);
+
+      // Reset everything
+      setEditingId(null);
+      setSelectedImage(null);
+
+      setFormData({
+        name: "",
+        region: "",
+        category: "",
+        latitude: "",
+        longitude: "",
+        description: "",
+        image: null,
+      });
+    } catch (error) {
+      console.log("Status:", error.response?.status);
+      console.log("Data:", error.response?.data);
+      console.log("Errors:", error.response?.data?.errors);
+      console.error(error);
+      alert("Something went wrong.");
+    }
+  };
+
+  const fetchCoordinates = async () => {
+  if (!formData.name) return;
+
+  try {
+    const response = await fetch(
+      "https://places.googleapis.com/v1/places:searchText",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+          "X-Goog-FieldMask":
+            "places.location,places.displayName",
+        },
+        body: JSON.stringify({
+          textQuery: `${formData.name}, Nepal`,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.places && data.places.length > 0) {
+      const location = data.places[0].location;
+
+      setFormData((prev) => ({
+        ...prev,
+        latitude: location.latitude,
+        longitude: location.longitude,
+      }));
+    }
+  } catch (err) {
+    console.error("Failed to fetch coordinates", err);
+  }
+};
 
   return (
     <>
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-4xl font-bold">Destinations</h1>
-          <p className="text-gray-500 mt-1">{destinations.length} Destinations</p>
+          <p className="text-gray-500 mt-1">
+            {destinations.length} Destinations
+          </p>
         </div>
 
         <button
@@ -188,10 +224,14 @@ function DestinationManager() {
                   </span>
                 </div>
 
-                <p className="text-gray-600 mt-2 max-w-2xl">{item.description}</p>
+                <p className="text-gray-600 mt-2 max-w-2xl">
+                  {item.description}
+                </p>
 
                 <div className="flex flex-wrap gap-3 mt-3 text-sm text-gray-600">
-                  <span className="text-teal-700 font-medium">{item.region}</span>
+                  <span className="text-teal-700 font-medium">
+                    {item.region}
+                  </span>
                   <span>Lat: {item.latitude}</span>
                   <span>Lng: {item.longitude}</span>
                 </div>
@@ -199,11 +239,17 @@ function DestinationManager() {
             </div>
 
             <div className="flex gap-4 shrink-0">
-              <button className="text-blue-600 hover:text-blue-800" onClick={() => handleEdit(item)}>
+              <button
+                className="text-blue-600 hover:text-blue-800"
+                onClick={() => handleEdit(item)}
+              >
                 <FaEdit size={20} />
               </button>
 
-              <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(item._id)}>
+              <button
+                className="text-red-500 hover:text-red-700"
+                onClick={() => handleDelete(item._id)}
+              >
                 <FaTrash size={20} />
               </button>
             </div>
@@ -227,9 +273,14 @@ function DestinationManager() {
               </button>
             </div>
 
-            <form onSubmit={(e) => e.preventDefault()} className="p-6 space-y-6">
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="p-6 space-y-6"
+            >
               <div>
-                <label className="block text-sm font-semibold mb-2">Destination Image</label>
+                <label className="block text-sm font-semibold mb-2">
+                  Destination Image
+                </label>
 
                 <label
                   htmlFor="destinationImage"
@@ -237,14 +288,20 @@ function DestinationManager() {
                 >
                   {selectedImage ? (
                     <img
-                      src={typeof selectedImage === "string" ? selectedImage : URL.createObjectURL(selectedImage)}
+                      src={
+                        typeof selectedImage === "string"
+                          ? selectedImage
+                          : URL.createObjectURL(selectedImage)
+                      }
                       alt="Preview"
                       className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="text-center">
                       <p className="text-gray-500">Click to upload image</p>
-                      <p className="text-sm text-gray-400 mt-2">JPG, PNG (Max 5MB)</p>
+                      <p className="text-sm text-gray-400 mt-2">
+                        JPG, PNG (Max 5MB)
+                      </p>
                     </div>
                   )}
                 </label>
@@ -260,21 +317,30 @@ function DestinationManager() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Name</label>
+                  <label className="block text-sm font-semibold mb-2">
+                    Name
+                  </label>
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    onBlur = {() => fetchCoordinates (formData.name)}
                     className="w-full border border-gray-300 rounded-xl p-3"
                     placeholder="Pokhara"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Category</label>
+                  <label className="block text-sm font-semibold mb-2">
+                    Category
+                  </label>
                   <select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
                     className="w-full border border-gray-300 rounded-xl p-3 bg-white"
                   >
                     <option value="">Select category</option>
@@ -287,33 +353,45 @@ function DestinationManager() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Region</label>
+                  <label className="block text-sm font-semibold mb-2">
+                    Region
+                  </label>
                   <input
                     type="text"
                     value={formData.region}
-                    onChange={(e) => setFormData({ ...formData, region: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, region: e.target.value })
+                    }
                     className="w-full border border-gray-300 rounded-xl p-3"
                     placeholder="Gandaki"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Latitude</label>
+                  <label className="block text-sm font-semibold mb-2">
+                    Latitude
+                  </label>
                   <input
                     type="text"
                     value={formData.latitude}
-                    onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, latitude: e.target.value })
+                    }
                     className="w-full border border-gray-300 rounded-xl p-3"
                     placeholder="28.2096"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Longitude</label>
+                  <label className="block text-sm font-semibold mb-2">
+                    Longitude
+                  </label>
                   <input
                     type="text"
                     value={formData.longitude}
-                    onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, longitude: e.target.value })
+                    }
                     className="w-full border border-gray-300 rounded-xl p-3"
                     placeholder="83.9856"
                   />
@@ -321,11 +399,15 @@ function DestinationManager() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2">Description</label>
+                <label className="block text-sm font-semibold mb-2">
+                  Description
+                </label>
                 <textarea
                   rows={6}
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   className="w-full border border-gray-300 rounded-xl p-3 resize-none"
                   placeholder="Write destination description..."
                 />
@@ -345,7 +427,9 @@ function DestinationManager() {
                   onClick={handleSave}
                   className="px-6 py-3 bg-teal-700 text-white rounded-xl hover:bg-teal-800"
                 >
-                  {editingId === null ? "Save Destination" : "Update Destination"}
+                  {editingId === null
+                    ? "Save Destination"
+                    : "Update Destination"}
                 </button>
               </div>
             </form>
