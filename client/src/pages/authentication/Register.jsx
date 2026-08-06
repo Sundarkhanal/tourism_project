@@ -4,7 +4,7 @@ import {FaArrowLeft} from "react-icons/fa";
 import {MdEmail} from "react-icons/md";
 import {FaLock} from "react-icons/fa";
 import { toast } from "sonner";
-import axios from "axios";
+import api from "../../api/axios";
 
 import { useNavigate } from "react-router-dom";
 
@@ -32,7 +32,7 @@ function Register() {
     e.preventDefault();
 
     try {
-        const response = await axios.post("/auth/register",formData
+        const response = await api.post("/auth/register",formData
         // { can write this but is long as formdata contains all the req fields
         //     name: formData.name,
         //     email: formData.email,
