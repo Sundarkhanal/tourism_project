@@ -111,7 +111,7 @@ const FeaturedPackages = () => {
                   {item.company}
                 </p>
 
-                <p className="text-gray-600 mt-4 leading-relaxed">
+                <p className="text-gray-600 mt-4 leading-relaxed text-justify">
                   {item.description}
                 </p>
 
@@ -122,7 +122,6 @@ const FeaturedPackages = () => {
                     Details
                   </button>
                 </div> */}
-
               </div>
             </div>
           ))}

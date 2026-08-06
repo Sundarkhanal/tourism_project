@@ -10,9 +10,7 @@
     --color-background: #FAF8F5;
     --color-foreground: #172126;
     --color-primary: #1F7A71;
-    --color-secondary: #FFC800;
     --color-card: #FFFFFF;
-    --color-card-foreground: #172126;
     --font-heading: "Playfair Display", serif;
     --font-body: "Inter", sans-serif;
   }
@@ -22,20 +20,8 @@
   .bg-color-background {
     background-color: var(--color-background);
   }
-  .text-color-foreground {
-    color: var(--color-foreground);
-  }
-  .bg-color-primary {
-    background-color: var(--color-primary);
-  }
-  .bg-color-secondary {
-    background-color: var(--color-secondary);
-  }
   .bg-color-card {
     background-color: var(--color-card);
-  }
-  .text-color-card-foreground {
-    color: var(--color-card-foreground);
   }
   .font-heading {
     font-family: var(--font-heading);

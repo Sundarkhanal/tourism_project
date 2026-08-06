@@ -108,6 +108,7 @@ const Profile = () => {
     } finally {
       localStorage.removeItem("token");
       navigate("/");
+      window.location.href = "/";
     }
   };
 
