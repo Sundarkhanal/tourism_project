@@ -43,7 +43,7 @@ const ActivateAccount = () => {
     try {
       setLoading(true);
 
-      await api.post("/auth/resend-otp", {
+      await api.post("/auth/resend-activate-otp", {
         email,
       });
 
