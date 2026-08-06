@@ -97,7 +97,6 @@ function BlogManager() {
         // Refresh the news list
         await fetchBlogs();
     
-        // Close modal
         setShowModal(false);
     
         // Reset everything
@@ -151,7 +150,9 @@ function BlogManager() {
               )}
 
               <div>
-                <h2 className="text-2xl font-bold">{item._id}</h2>
+                <h2 className="text-2xl font-bold">
+                  {item.user_id?.name || "Anonymous"}
+                </h2>
                 <p className="text-gray-600 mt-2 max-w-2xl">{item.description}</p>
               </div>
             </div>
