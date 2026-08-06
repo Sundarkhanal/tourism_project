@@ -5,30 +5,22 @@ import Dashboard from "../components/AdminDashboard";
 import DestinationManager from "../components/DestinationManager";
 import BlogManager from "../components/BlogManager";
 import NewsManager from "../components/NewsManager";
-import UserManager from "../components/UserManager";
+import ReviewManager from "../components/ReviewManager";
 
 function AdminPanel() {
-
-    const [active, setActive] = useState("dashboard");
+  const [active, setActive] = useState("dashboard");
   return (
     <div className="flex min-h-screen">
+      <AdminSidebar active={active} onChange={setActive} />
 
-            <AdminSidebar
-                active={active}
-                onChange={setActive}
-            />
-
-            <div className="flex-1 p-8">
-
-                {active === "dashboard" && <Dashboard />}
-                {active === "users" && <UserManager />}
-                {active === "news" && <NewsManager />}
-                {active === "blog" && <BlogManager />}
-                {active === "destinations" && <DestinationManager />}
-
-            </div>
-
-        </div>
+      <div className="flex-1 p-8">
+        {active === "dashboard" && <Dashboard />}
+        {active === "reviews" && <ReviewManager />}
+        {active === "news" && <NewsManager />}
+        {active === "blog" && <BlogManager />}
+        {active === "destinations" && <DestinationManager />}
+      </div>
+    </div>
   );
 }
 

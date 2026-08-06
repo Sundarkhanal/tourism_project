@@ -11,11 +11,21 @@ function DestinationManager() {
   const [formData, setFormData] = useState({
     name: "",
     region: "",
+    category: "",
     latitude: "",
     longitude: "",
     description: "",
     image: null,
   });
+
+  const categoryOptions = [
+    "Mountain",
+    "Lake",
+    "Temple",
+    "Heritage",
+    "Adventure",
+    "National Park",
+  ];
 
  const fetchDestinations = useCallback (async () => {
       try{
@@ -49,6 +59,7 @@ function DestinationManager() {
     setFormData({
       name: "",
       region: "",
+      category: "",
       latitude: "",
       longitude: "",
       description: "",
@@ -85,6 +96,7 @@ function DestinationManager() {
     
         form.append("name", formData.name);
         form.append("region", formData.region);
+        form.append("category", formData.category);
         form.append("latitude", formData.latitude);
         form.append("longitude", formData.longitude);
         form.append("description", formData.description);
@@ -116,6 +128,7 @@ function DestinationManager() {
         setFormData({
            name: "",
       region: "",
+      category: "",
       latitude: "",
       longitude: "",
       description: "",
@@ -168,7 +181,12 @@ function DestinationManager() {
               )}
 
               <div>
-                <h2 className="text-2xl font-bold">{item.name}</h2>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h2 className="text-2xl font-bold">{item.name}</h2>
+                  <span className="inline-flex items-center rounded-full bg-teal-50 px-3 py-1 text-sm font-medium text-teal-700">
+                    {item.category || "Uncategorized"}
+                  </span>
+                </div>
 
                 <p className="text-gray-600 mt-2 max-w-2xl">{item.description}</p>
 
@@ -250,6 +268,22 @@ function DestinationManager() {
                     className="w-full border border-gray-300 rounded-xl p-3"
                     placeholder="Pokhara"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Category</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="w-full border border-gray-300 rounded-xl p-3 bg-white"
+                  >
+                    <option value="">Select category</option>
+                    {categoryOptions.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>

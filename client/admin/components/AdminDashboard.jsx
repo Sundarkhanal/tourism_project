@@ -50,11 +50,12 @@ function AdminDashboard() {
       api.get("/destination/all-destinations"),
       api.get("/news/all-news"),
       api.get("/blog/all-blogs"),
+      api.get("/review/all-reviews")
     ]);
 
     console.log(responses);
 
-    const [destinations, news, blogs] = responses;
+    const [destinations, news, blogs, reviews] = responses;
 
     console.log(destinations);
     console.log(news);
@@ -64,7 +65,7 @@ function AdminDashboard() {
       destinations: destinations.data.data.length,
       news: news.data.data.length,
       blogs: blogs.data.data.length,
-      users: 0,
+      reviews: reviews.data.data.length,
     });
   } catch (error) {
     console.error(error);
@@ -98,9 +99,9 @@ function AdminDashboard() {
       gradient: "from-green-600 to-green-400",
     },
     {
-      title: "Users",
-      count: 0,
-      subtitle: "Registered users",
+      title: "Reviews",
+      count: stats.reviews,
+      subtitle: "Reviews from the users",
       icon: FaUsers,
       gradient: "from-purple-600 to-purple-400",
     },

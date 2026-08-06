@@ -12,7 +12,7 @@ const navItems = [
   { key: "destinations", label: "Destinations", icon: FaMapMarkerAlt },
   { key: "news", label: "News Articles", icon: FaNewspaper },
   { key: "blog", label: "Blog Posts", icon: FaBookOpen },
-  { key: "users", label: "Users", icon: FaUsers },
+  { key: "reviews", label: "Reviews", icon: FaUsers },
 ];
 
 function AdminSidebar({ active, onChange }) {
