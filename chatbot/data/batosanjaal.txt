@@ -2,17 +2,21 @@ BatoSanjaal Portal Core Knowledge Base
 
 1. BatoSanjaal Platform Overview & Home Section
 Welcome to BatoSanjaal, the ultimate digital bridge for travelers navigating Nepal's rich cultural and natural landscapes. Our platform offers a distinct "Locate Me" radius mapping feature that tracks your real-time geolocation coordinates and instantly fetches points of interest, cultural sites, and regional amenities within a strict 5km radius using Galli Maps. If you are exploring an isolated trail where no matching assets are found, the system gracefully triggers a fallback alert stating "No assets found within 5km."
+
 2. BatoSanjaal Featured Travel & Hotel Packages
 BatoSanjaal partners with local vendors to display premium, fixed-grid featured packages on the homepage:
-- Pokhara Lakeside Retreat: Includes a 3-night stay at a 3-star lakeside hotel, a guided boating session to Tal Barahi Temple, and a sunrise trip to Sarangkot. Price is inclusive of breakfast.
-- Chitwan Wildlife Safari: A 2-day package featuring an all-inclusive jungle resort stay, a guided jeep safari to spot the one-horned rhinoceros, and a traditional Tharu cultural dance evening show.
-- Kathmandu Heritage Walk: A 1-day guided excursion covering Kathmandu Durbar Square, Swayambhunath Stupa, and the historic alleys of Patan. Includes entry fees and a traditional Newari lunch.
+- Himalayan Trekking Bundle: Offered by ABC Trail Nepal at NPR 25,000. A full gear package including a backpack, trekking pole, water bottle, jacket, thermals, UV protection glasses, and gear essentials.
+- Chitwan Jungle Safari Escapade: Offered by Wild Sauraha Adventures at NPR 15,000. A 2 Nights / 3 Days package including a 4WD jeep safari, dugout canoe ride along the Rapti River, Tharu cultural dance, resort stay, and all meals.
+- Powerful Pokhara Combo: Offered by Lakeside Gateway Tours at NPR 18,500. Includes tandem paragliding from Sarangkot, boating at Phewa Lake, visits to Bat Cave (Chameri Gufa), Davis Falls, Pame hangout, plus 2 nights hotel accommodation.
+- Everest Base Camp Express Trek: Offered by Khumbu Trail Expeditions at NPR 150,000. A 12-day fully guided trek to EBC and Kala Patthar. Includes round-trip Kathmandu-Lukla flights, teahouse accommodation, mountain permits, guide, and porter services.
+- Upper Mustang Overland Tour: Offered by Kingdom Overland Nepal at NPR 19,000. A 5 Nights / 6 Days 4WD Scorpio overland journey from Pokhara to Muktinath temple, Marpha, and ancient sky caves.
+- Kathmandu Valley All-UNESCO Heritage Pass: Offered by Yeti Heritage Trails at NPR 8,500. A 2-day guided cultural city tour covering all 7 UNESCO sites: Swayambhunath, Boudhanath, Pashupatinath, Changu Narayan, and the Durbar Squares of Kathmandu, Patan, & Bhaktapur.
 
-3. Localized Travel News & Safety Updates
-- News Entry 1 (Safety Alert): The Department of Hydrology and Meteorology has issued a heavy rainfall warning for the Koshi and Bagmati provinces. Travelers trekking near the Langtang region are strongly advised to halt trekking activities for the next 24 hours due to temporary trail blocks and potential landslide risks. Local authorities are monitoring the routes.
-- News Entry 2 (Cultural Festival): The vibrant Rato Machindranath Jatra festival has officially commenced in Patan, Lalitpur. Expect significant traffic diversions around the Pulchowk and Jawalakhel areas over the weekend. Travelers are highly encouraged to visit the festival routes to experience the historic Newari chariot procession.
-- News Entry 3 (Infrastructure Update): The local municipality has completed a major road upgrade along the primary highway leading to Sauraha, Chitwan. The travel time from Kathmandu to Chitwan has now dropped significantly, making road travel smoother and safer for tourist buses.
-- News Entry 4 (Environment): Annapurna Conservation Area Project (ACAP) announces new plastic-free regulations across primary trekking routes. Travelers must register reusable water bottles at entry checkpoints.
+3. Nepal eSIM Purchase & Tourist Telecom Guide
+Tourists visiting Nepal can easily obtain cellular connectivity and mobile data (eSIM or physical SIM card) through major providers like Nepal Telecom (NTC) and Ncell:
+- How to Buy an eSIM: Travelers can purchase an eSIM online prior to arrival via official provider web portals/apps or at dedicated airport counter kiosks upon landing at Tribhuvan International Airport (TIA), Kathmandu.
+- Verification Requirements: A valid physical passport and a valid Nepal entry visa are mandatory for identity verification and registration.
+- Activation Process: Users scan a provided QR code sent via email or printout using their phone's cellular/eSIM camera settings while connected to Wi-Fi to install and activate the profile instantly.
 
 4. Emergency Support & Vital Contact Hotlines
 For immediate safety assistance or crisis management while traveling across Nepal, tourists can access these hotlines directly via the static emergency footer on our application:

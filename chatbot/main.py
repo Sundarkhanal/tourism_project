@@ -35,7 +35,6 @@ COLLECTION_NAME = "batosanjaal_srs"
 class ChatRequest(BaseModel):
     message: str
 
-# ADDED: Pydantic model matching your MongoDB News Schema
 class NewsIngestRequest(BaseModel):
     news_id: str
     title: str
@@ -103,12 +102,35 @@ async def chat_with_bot(request: ChatRequest):
         retrieved_context = "\n\n---\n\n".join(context_chunks) if context_chunks else "No specific document context found."
 
         system_instruction = (
-            "You are the helpful AI Travel Assistant for the BatoSanjaal Tourism Platform in Nepal.\n"
-            "Your job is to answer travel queries, explain features, provide security details, or outline travel itineraries.\n"
-            "Use the provided context from BatoSanjaal documents to formulate your answer.\n"
-            "If the answer isn't fully in the context, supplement it with general knowledge about Nepal tourism, "
-            "maintaining a safe, helpful, and professional tone.\n\n"
-            f"--- CONTEXT FROM BATOSANJAAL PORTAL ---\n{retrieved_context}"
+            "You are the official AI Travel Assistant for BatoSanjaal, a tourism platform in Nepal.\n\n"
+            "### RESPONSE FORMATTING RULES:\n"
+            "1. **General Queries & Portal Info**:\n"
+            "   - Keep answers clear, direct, and well-structured.\n"
+            "   - Use clean Markdown: bold headers, bullet points, and short readable paragraphs.\n"
+            "   - Avoid long, dense blocks of text.\n\n"
+            "2. **Itinerary Requests (STRICT RULE: NO PARAGRAPHS)**:\n"
+            "   - NEVER write itineraries as continuous paragraph blocks.\n"
+            "   - You MUST follow this exact Markdown structure for all itinerary responses:\n\n"
+            "   --- SAMPLE ITINERARY FORMAT TO FOLLOW STRICTLY ---\n"
+            "   ## 3-Day Pokhara Tour Itinerary\n\n"
+            "   ### Day 1: Arrival & Phewa Lake Exploration\n"
+            "   * **Morning**: Travel from Kathmandu to Pokhara (Tourist Bus / Flight). Check into hotel.\n"
+            "   * **Afternoon**: Boating at Phewa Lake and visit Tal Barahi Temple.\n"
+            "   * **Evening**: Stroll along Lakeside Pokhara and enjoy dinner at local cafes.\n"
+            "   * **Local Tip**: Book boat tickets at the official counter near the shore.\n\n"
+            "   ### Day 2: Sunrise & Adventure Activities\n"
+            "   * **Morning**: Early morning trip to Sarangkot for sunrise over Annapurna Range.\n"
+            "   * **Afternoon**: Visit Davis Fall, Gupteshwor Cave, and World Peace Pagoda.\n"
+            "   * **Evening**: Relax by the lake or try local Nepali Thali.\n"
+            "   --- END OF SAMPLE FORMAT ---\n\n"
+            "3. **Additional Capabilities Notice (CONTEXTUAL)**:\n"
+            "   - When natural (e.g., general inquiries, open-ended travel questions, or first-time welcomes), you may mention: 'I can also share the latest tourism news or tips if needed.'\n"
+            "   - Do NOT repeat this sign-off during active back-and-forth conversations or direct fast answers.\n\n"
+            "4. **Context & Scope**:\n"
+            "   - Primary source: BatoSanjaal platform documents provided.\n"
+            "   - If context is missing, seamlessly complement with accurate, general Nepal tourism knowledge.\n"
+            "   - Maintain a friendly, safe, professional, and encouraging travel-guide tone.\n\n"
+            f"--- RETRIEVED BATOSANJAAL CONTEXT ---\n{retrieved_context}"
         )
 
         chat_response = ai_client.models.generate_content(
@@ -116,7 +138,7 @@ async def chat_with_bot(request: ChatRequest):
             contents=user_query,
             config=types.GenerateContentConfig(
                 system_instruction=system_instruction,
-                temperature=0.7
+                temperature=0.3
             )
         )
 
@@ -127,16 +149,10 @@ async def chat_with_bot(request: ChatRequest):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
-
-# =====================================================================
-# ADDED: REAL-TIME NEWS VECTOR INGESTION & DELETION ENDPOINTS
-# =====================================================================
-
 @app.post("/api/rag/ingest-news")
 async def ingest_single_news(news: NewsIngestRequest):
     """Called automatically by Express Server whenever news is Created/Updated"""
     try:
-        # Combine relevant fields for Gemini vector embedding
         combined_text = (
             f"News Title: {news.title}\n"
             f"Location: {news.location}\n"
@@ -144,7 +160,6 @@ async def ingest_single_news(news: NewsIngestRequest):
             f"Details: {news.description}"
         )
         
-        # 1. Generate Embedding using Gemini
         embedding_response = ai_client.models.embed_content(
             model="gemini-embedding-001",
             contents=combined_text,
@@ -152,10 +167,8 @@ async def ingest_single_news(news: NewsIngestRequest):
         )
         vector = embedding_response.embeddings[0].values
 
-        # 2. Derive persistent UUID from MongoDB news_id string
         point_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, news.news_id))
 
-        # 3. Upsert point into Qdrant
         point = PointStruct(
             id=point_id,
             vector=vector,
